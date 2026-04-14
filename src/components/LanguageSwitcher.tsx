@@ -1,18 +1,19 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { Link, usePathname } from "@/i18n/navigation";
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
   const pathname = usePathname();
+  const t = useTranslations("Header");
 
   return (
     <div
       className="flex items-center gap-1.5 rounded-md border border-neutral-200/90 bg-white px-1.5 py-0.5 text-[12px] font-medium text-neutral-700"
       role="navigation"
-      aria-label="Language"
+      aria-label={t("languageNav")}
     >
       <Link
         href={pathname}

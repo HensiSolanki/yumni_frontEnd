@@ -16,8 +16,7 @@
     "navMobile": "Mobile Main",
     "ariaMapSearch": "Map Search",
     "ariaAddListing": "Add Listing",
-    "languageEn": "English",
-    "languageAr": "العربية"
+    "languageNav": "Language"
   },
   "Pages": {
     "loginTitle": "Login",

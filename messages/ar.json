@@ -16,8 +16,7 @@
     "navMobile": "القائمة الرئيسية — الجوال",
     "ariaMapSearch": "البحث على الخريطة",
     "ariaAddListing": "إضافة إعلان",
-    "languageEn": "English",
-    "languageAr": "العربية"
+    "languageNav": "اللغة"
   },
   "Pages": {
     "loginTitle": "تسجيل الدخول",
