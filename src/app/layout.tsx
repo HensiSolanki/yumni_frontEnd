@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, Noto_Sans_Arabic } from "next/font/google";
-import Header from "@/components/Header/Header";
-import ToastWrapper from "@/components/toastWrapper/index";
+import { Providers } from "./providers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -44,9 +43,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${notoArabic.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-white font-[family-name:var(--font-inter),ui-sans-serif,system-ui,sans-serif] text-[#171717] dark:bg-white dark:text-[#171717]">
-        <ToastWrapper />
-        <Header />
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

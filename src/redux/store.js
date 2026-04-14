@@ -1,6 +1,6 @@
 "use client"
 import { configureStore } from "@reduxjs/toolkit"
-import rootReducer from "./rootReducer"
+import rootReducer from "./rootReducers"
 
 // const persistConfig = {
 //     key: "auth",
@@ -16,4 +16,4 @@ const store = configureStore({
 })
 
 
-export  {store}
+export { store }
