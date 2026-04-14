@@ -1,0 +1,29 @@
+{
+  "Metadata": {
+    "title": "عقار — العقارات في المملكة العربية السعودية",
+    "description": "اعثر على العقارات والمشاريع والإيجار اليومي في جميع أنحاء المملكة."
+  },
+  "Header": {
+    "brandArabic": "عقار",
+    "brandLatin": "AQAR",
+    "realEstate": "العقارات",
+    "projects": "المشاريع",
+    "dailyRent": "الإيجار اليومي",
+    "mapSearch": "البحث على الخريطة",
+    "addListing": "+ أضف إعلانًا",
+    "login": "تسجيل الدخول",
+    "navMain": "القائمة الرئيسية",
+    "navMobile": "القائمة الرئيسية — الجوال",
+    "ariaMapSearch": "البحث على الخريطة",
+    "ariaAddListing": "إضافة إعلان",
+    "languageEn": "English",
+    "languageAr": "العربية"
+  },
+  "Pages": {
+    "loginTitle": "تسجيل الدخول",
+    "mapTitle": "البحث على الخريطة",
+    "addListingTitle": "إضافة إعلان",
+    "dailyRentTitle": "الإيجار اليومي",
+    "projectsTitle": "المشاريع"
+  }
+}

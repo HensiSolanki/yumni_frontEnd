@@ -1,0 +1,29 @@
+{
+  "Metadata": {
+    "title": "Aqar — Real estate in Saudi Arabia",
+    "description": "Find properties, projects, and daily rent across Saudi Arabia."
+  },
+  "Header": {
+    "brandArabic": "عقار",
+    "brandLatin": "AQAR",
+    "realEstate": "Real Estate",
+    "projects": "Projects",
+    "dailyRent": "Daily Rent",
+    "mapSearch": "Map Search",
+    "addListing": "+ Add",
+    "login": "Login",
+    "navMain": "Main",
+    "navMobile": "Mobile Main",
+    "ariaMapSearch": "Map Search",
+    "ariaAddListing": "Add Listing",
+    "languageEn": "English",
+    "languageAr": "العربية"
+  },
+  "Pages": {
+    "loginTitle": "Login",
+    "mapTitle": "Map Search",
+    "addListingTitle": "Add listing",
+    "dailyRentTitle": "Daily Rent",
+    "projectsTitle": "Projects"
+  }
+}

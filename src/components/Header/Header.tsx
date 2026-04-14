@@ -1,59 +1,49 @@
 "use client";
 
-import Link from "next/link";
 import type { FC } from "react";
-import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  CloseIconSvg,
   IconBuildingSvg,
   IconCalendarSvg,
   IconChartSvg,
   IconMapFoldedSvg,
   IconUserFramedSvg,
-  MenuIconSvg,
   SaudiMapSilhouetteSvg,
 } from "@/assets";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { Link } from "@/i18n/navigation";
 import { setHeaderTabOptions } from "@/redux/header/slice";
 
-/** Brand / active tab / logo — deep green (aqar.fm style) */
-const BRAND_GREEN = "#1B5E38";
-const MUTED = "#555555";
+type TabIcon = FC<{ className?: string }>;
+
+type RightLink = {
+  href: string;
+  labelKey?: "mapSearch" | "addListing";
+  Icon?: TabIcon;
+  framedIcon?: boolean;
+};
 
 const MAIN_TABS = [
-  { index: 0, label: "Real Estate", Icon: IconBuildingSvg },
-  { index: 1, label: "Projects", Icon: IconChartSvg },
-  { index: 2, label: "Daily Rent", Icon: IconCalendarSvg },
+  { index: 0, labelKey: "realEstate" as const, Icon: IconBuildingSvg },
+  { index: 1, labelKey: "projects" as const, Icon: IconChartSvg },
+  { index: 2, labelKey: "dailyRent" as const, Icon: IconCalendarSvg },
 ] as const;
 
-const RIGHT_LINKS = [
-  { href: "/map", label: "Map Search", Icon: IconMapFoldedSvg as FC<{ className?: string }> },
-  { href: "/add-listing", label: "+ Add" },
-  {
-    href: "/login",
-    label: "",
-    Icon: IconUserFramedSvg as FC<{ className?: string }>,
-    framedIcon: true,
-  },
-] as const;
+const RIGHT: RightLink[] = [
+  { href: "/map", labelKey: "mapSearch", Icon: IconMapFoldedSvg },
+  { href: "/add-listing", labelKey: "addListing" },
+  { href: "/login", Icon: IconUserFramedSvg, framedIcon: true },
+];
 
-const Header = () => {
+export default function Header() {
   const dispatch = useDispatch();
+  const t = useTranslations("Header");
   const activeTab = useSelector(
     (state: { headerApiSlice: { headerTabOptions: number } }) =>
-      state.headerApiSlice.headerTabOptions
+      state.headerApiSlice.headerTabOptions,
   );
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, [open]);
 
   const fontUi =
     "font-[family-name:var(--font-inter),ui-sans-serif,system-ui,sans-serif]";
@@ -62,16 +52,14 @@ const Header = () => {
     <header
       className={`sticky top-0 z-40 border-b border-neutral-200/80 bg-white text-[15px] font-medium leading-none tracking-[-0.01em] text-neutral-800 dark:bg-white ${fontUi}`}
     >
-      <div className="relative mx-auto flex h-[52px] max-w-[1400px] items-center px-4 sm:px-6">
+      <div className="relative mx-auto flex h-[52px] w-full max-w-[1280px] items-center px-7 sm:px-8 lg:px-30">
         <div className="flex min-w-0 flex-1 justify-start">
           <Link
             href="/"
-            className="flex shrink-0 items-center gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E38]/25"
+            onClick={() => dispatch(setHeaderTabOptions(0))}
+            className="flex shrink-0 items-center gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-brand/25"
           >
-            <div
-              className="flex flex-col items-end leading-none"
-              style={{ color: BRAND_GREEN }}
-            >
+            <div className="flex flex-col items-end leading-none text-brand">
               <span
                 className="text-[1.0625rem] font-bold tracking-tight"
                 dir="rtl"
@@ -80,23 +68,22 @@ const Header = () => {
                   fontFamily: "var(--font-noto-arabic), system-ui, sans-serif",
                 }}
               >
-                عقار
+                {t("brandArabic")}
               </span>
               <span className="mt-0.5 text-[0.6875rem] font-bold uppercase tracking-[0.22em]">
-                AQAR
+                {t("brandLatin")}
               </span>
             </div>
-            <SaudiMapSilhouetteSvg className="h-9 w-[1.85rem] shrink-0 text-[#1B5E38]" />
+            <SaudiMapSilhouetteSvg className="h-9 w-[1.85rem] shrink-0 text-brand" />
           </Link>
         </div>
 
         <nav
           className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-9 md:flex"
-          aria-label="Main"
+          aria-label={t("navMain")}
         >
-          {MAIN_TABS.map(({ index, label, Icon }) => {
+          {MAIN_TABS.map(({ index, labelKey, Icon }) => {
             const active = activeTab === index;
-            const color = active ? BRAND_GREEN : MUTED;
             return (
               <button
                 key={index}
@@ -105,145 +92,100 @@ const Header = () => {
                 className={[
                   "flex items-center gap-2 border-b-2 pb-1 text-[14px] transition-colors",
                   active
-                    ? "border-[#1B5E38]"
-                    : "border-transparent hover:text-neutral-700",
+                    ? "border-brand text-brand"
+                    : "border-transparent text-muted hover:text-neutral-700",
                 ].join(" ")}
-                style={{ color }}
               >
                 <Icon className="shrink-0" />
-                <span className="leading-tight">{label}</span>
+                <span className="leading-tight">{t(labelKey)}</span>
               </button>
             );
           })}
         </nav>
 
-        <div className="hidden min-w-0 flex-1 items-center justify-end gap-8 text-[14px] font-medium md:flex">
-          {RIGHT_LINKS.map((item) => {
-            const Icon = "Icon" in item ? item.Icon : undefined;
+        <div className="hidden min-w-0 flex-1 items-center justify-end gap-5 text-[14px] font-medium md:flex">
+          <LanguageSwitcher />
+          {RIGHT.map((item) => {
+            const Icon = item.Icon;
             const isLogin = item.href === "/login";
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-1.5 text-[#555555] transition-opacity hover:opacity-80"
-                aria-label={isLogin ? "Login" : undefined}
+                className="flex items-center gap-1.5 text-muted transition-opacity hover:opacity-80"
+                aria-label={isLogin ? t("login") : undefined}
               >
                 {Icon ? (
-                  "framedIcon" in item && item.framedIcon ? (
-                    <span className="inline-flex rounded border border-neutral-300/90 p-[3px] text-[#555555]">
+                  item.framedIcon ? (
+                    <span className="inline-flex rounded border border-neutral-300/90 p-[3px] text-muted">
                       <Icon className="shrink-0" />
                     </span>
                   ) : (
                     <Icon className="shrink-0" />
                   )
                 ) : null}
-                {item.label ? (
-                  <span className="leading-tight">{item.label}</span>
+                {item.labelKey ? (
+                  <span className="leading-tight">{t(item.labelKey)}</span>
                 ) : null}
               </Link>
             );
           })}
         </div>
 
-        <div className="flex flex-1 justify-end md:hidden">
-          <button
-            type="button"
-            className="-mr-2 rounded p-2 text-[#555555] outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E38]/25"
-            aria-expanded={open}
-            aria-controls="mobile-drawer"
-            aria-label={open ? "Close menu" : "Open menu"}
-            onClick={() => setOpen((v) => !v)}
+        <div className="flex flex-1 items-center justify-end gap-1.5 md:hidden">
+          <LanguageSwitcher />
+          <Link
+            href="/map"
+            className="rounded p-1.5 text-muted transition-opacity hover:opacity-80"
+            aria-label={t("ariaMapSearch")}
           >
-            {open ? (
-              <CloseIconSvg className="h-6 w-6" />
-            ) : (
-              <MenuIconSvg className="h-6 w-6" />
-            )}
-          </button>
+            <IconMapFoldedSvg className="h-[1.15rem] w-[1.15rem] shrink-0" />
+          </Link>
+          <Link
+            href="/add-listing"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-[#008a3d] text-xl leading-none text-white transition-opacity hover:opacity-90"
+            aria-label={t("ariaAddListing")}
+          >
+            +
+          </Link>
+          <Link
+            href="/login"
+            className="rounded p-1.5 text-muted transition-opacity hover:opacity-80"
+            aria-label={t("login")}
+          >
+            <span className="inline-flex rounded border border-neutral-300/90 p-[2px] text-muted">
+              <IconUserFramedSvg className="h-[1.15rem] w-[1.15rem] shrink-0" />
+            </span>
+          </Link>
         </div>
       </div>
 
-      {open ? (
-        <>
-          <button
-            type="button"
-            className="fixed inset-0 z-50 bg-black/30 md:hidden"
-            aria-label="Close menu"
-            onClick={() => setOpen(false)}
-          />
-          <div
-            id="mobile-drawer"
-            className="fixed inset-y-0 right-0 z-50 flex w-[min(100%,20rem)] flex-col border-l border-neutral-200/90 bg-white shadow-xl md:hidden"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Navigation"
-          >
-            <div className="flex items-center justify-between border-b border-neutral-200/80 px-4 py-3">
-              <span className="text-sm font-semibold text-[#555555]">Menu</span>
+      <div className="border-t border-neutral-200/70 md:hidden">
+        <nav
+          className="mx-auto flex w-full max-w-[1280px] items-center"
+          aria-label={t("navMobile")}
+        >
+          {MAIN_TABS.map(({ index, labelKey, Icon }) => {
+            const active = activeTab === index;
+            return (
               <button
+                key={index}
                 type="button"
-                className="rounded p-2 text-[#555555] outline-none focus-visible:ring-2 focus-visible:ring-[#1B5E38]/25"
-                aria-label="Close menu"
-                onClick={() => setOpen(false)}
+                onClick={() => dispatch(setHeaderTabOptions(index))}
+                className={[
+                  "flex flex-1 items-center justify-center gap-2 border-b-[3px] px-1 py-3 text-[0.95rem] font-medium transition-colors",
+                  active
+                    ? "border-brand text-brand"
+                    : "border-transparent text-[#3f3f46]",
+                ].join(" ")}
               >
-                <CloseIconSvg className="h-5 w-5" />
+                <Icon className="shrink-0" />
+                <span className="leading-tight">{t(labelKey)}</span>
               </button>
-            </div>
-            <nav className="flex flex-col gap-0.5 p-4" aria-label="Mobile">
-              {MAIN_TABS.map(({ index, label, Icon }) => {
-                const active = activeTab === index;
-                const color = active ? BRAND_GREEN : MUTED;
-                return (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => {
-                      dispatch(setHeaderTabOptions(index));
-                      setOpen(false);
-                    }}
-                    className="flex w-full items-center gap-2.5 rounded-md px-3 py-2.5 text-left text-sm font-medium"
-                    style={{
-                      color,
-                      borderLeft: active
-                        ? `3px solid ${BRAND_GREEN}`
-                        : "3px solid transparent",
-                    }}
-                  >
-                    <Icon className="shrink-0" />
-                    {label}
-                  </button>
-                );
-              })}
-              <div className="my-2 border-t border-neutral-200/80" />
-              {RIGHT_LINKS.map((item) => {
-                const Icon = "Icon" in item ? item.Icon : undefined;
-                const isLogin = item.href === "/login";
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium text-[#555555]"
-                    aria-label={isLogin ? "Login" : undefined}
-                  >
-                    {Icon ? (
-                      "framedIcon" in item && item.framedIcon ? (
-                        <span className="inline-flex rounded border border-neutral-300/90 p-[3px]">
-                          <Icon className="shrink-0" />
-                        </span>
-                      ) : (
-                        <Icon className="shrink-0" />
-                      )
-                    ) : null}
-                    {item.label ? item.label : null}
-                  </Link>
-                );
-              })}
-            </nav>
-          </div>
-        </>
-      ) : null}
+            );
+          })}
+        </nav>
+      </div>
     </header>
   );
-};
-
-export default Header;
+}
