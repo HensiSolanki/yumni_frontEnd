@@ -6,6 +6,7 @@ import IconUserFramedSvg from "./IconUserFramedSvg.svg";
 import SaudiMapSilhouetteSvg from "./SaudiMapSilhouetteSvg.svg";
 import MenuIconSvg from "./MenuIconSvg.svg";
 import CloseIconSvg from "./CloseIconSvg.svg";
+import SearchIconSvg from "./SearchIcon.svg";
 
 export {
   IconBuildingSvg,
@@ -16,4 +17,5 @@ export {
   SaudiMapSilhouetteSvg,
   MenuIconSvg,
   CloseIconSvg,
+  SearchIconSvg,
 };
