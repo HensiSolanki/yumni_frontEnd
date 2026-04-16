@@ -52,7 +52,7 @@ export default function Header() {
     <header
       className={`sticky top-0 z-40 border-b border-neutral-200/80 bg-white text-[15px] font-medium leading-none tracking-[-0.01em] text-neutral-800 dark:bg-white ${fontUi}`}
     >
-      <div className="relative mx-auto flex h-[52px] w-full max-w-[1280px] items-center px-7 sm:px-8 lg:px-30">
+      <div className="relative mx-auto flex h-[52px] w-full max-w-[1280px] items-center px-[7px] min-[641px]:px-[32px] lg:px-[110px]">
         <div className="flex min-w-0 flex-1 justify-start">
           <Link
             href="/"

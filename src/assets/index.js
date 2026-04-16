@@ -1,7 +1,17 @@
+import IconArrowUpRightSvg from "./IconArrowUpRightSvg.svg";
+import IconBathPropertySvg from "./IconBathPropertySvg.svg";
+import IconBedPropertySvg from "./IconBedPropertySvg.svg";
 import IconBuildingSvg from "./IconBuildingSvg.svg";
-import IconChartSvg from "./IconChartSvg.svg";
 import IconCalendarSvg from "./IconCalendarSvg.svg";
+import IconCarPropertySvg from "./IconCarPropertySvg.svg";
+import IconChartSvg from "./IconChartSvg.svg";
+import IconHeartOutlineSvg from "./IconHeartOutlineSvg.svg";
 import IconMapFoldedSvg from "./IconMapFoldedSvg.svg";
+import IconMoreHorizontalSvg from "./IconMoreHorizontalSvg.svg";
+import IconPhoneSvg from "./IconPhoneSvg.svg";
+import IconRulerAreaSvg from "./IconRulerAreaSvg.svg";
+import IconShareNodesSvg from "./IconShareNodesSvg.svg";
+import IconSofaPropertySvg from "./IconSofaPropertySvg.svg";
 import IconUserFramedSvg from "./IconUserFramedSvg.svg";
 import SaudiMapSilhouetteSvg from "./SaudiMapSilhouetteSvg.svg";
 import MenuIconSvg from "./MenuIconSvg.svg";
@@ -9,10 +19,20 @@ import CloseIconSvg from "./CloseIconSvg.svg";
 import SearchIconSvg from "./SearchIcon.svg";
 
 export {
+  IconArrowUpRightSvg,
+  IconBathPropertySvg,
+  IconBedPropertySvg,
   IconBuildingSvg,
-  IconChartSvg,
   IconCalendarSvg,
+  IconCarPropertySvg,
+  IconChartSvg,
+  IconHeartOutlineSvg,
   IconMapFoldedSvg,
+  IconMoreHorizontalSvg,
+  IconPhoneSvg,
+  IconRulerAreaSvg,
+  IconShareNodesSvg,
+  IconSofaPropertySvg,
   IconUserFramedSvg,
   SaudiMapSilhouetteSvg,
   MenuIconSvg,

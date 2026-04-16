@@ -2,20 +2,22 @@
 
 import { useSelector } from "react-redux";
 
-import DailyRentFilterOption from "@/components/landingPage/dailyRentFilterOption";
-import ProjectsFilterOption from "@/components/landingPage/projectsFilterOption";
-import RealEstateFilterOption from "@/components/landingPage/realEstatefilterOption";
-
+import RealEstateTab from "@/components/landingPage/realEstateTab";
+import DailyRentTab from "@/components/landingPage/dailyRentTab";
+import ProjectsTab from "@/components/landingPage/projectsTab";
 /** Matches `MAIN_TABS` indices in `Header.tsx`: 0 realEstate, 1 projects, 2 dailyRent */
-const HomeFilterByTab = () => {
+const HomeTabPanel = () => {
     const headerTabOptions = useSelector(
         (state) => state.headerApiSlice.headerTabOptions,
     );
 
-    if (headerTabOptions === 0) return <RealEstateFilterOption />;
-    if (headerTabOptions === 1) return <ProjectsFilterOption />;
-    if (headerTabOptions === 2) return <DailyRentFilterOption />;
-    return null;
+    const components = {
+        0: <RealEstateTab />,
+        1: <ProjectsTab />,
+        2: <DailyRentTab />,
+    };
+
+    return components[headerTabOptions] || null;
 };
 
-export default HomeFilterByTab;
+export default HomeTabPanel;
