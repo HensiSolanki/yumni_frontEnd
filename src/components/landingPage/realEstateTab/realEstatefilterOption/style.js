@@ -1,13 +1,13 @@
 import styled from "styled-components";
 
-/** Clips any stray overflow; inner track scrolls horizontally. */
+/** Clips any stray overflow; inner track scrolls horizontally. Matches Projects tab shell. */
 export const FilterSection = styled.section`
   width: 100%;
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
   background: #faf6f6;
-  border-bottom: 1px solid #e8dfe1;
+  border-bottom: 1px solid var(--color-brand);
   overflow-x: hidden;
 `;
 
@@ -21,15 +21,15 @@ export const FilterInner = styled.div`
   max-width: 1280px;
   min-width: 0;
   box-sizing: border-box;
-  padding: 6px 7px;
+  padding: 8px 7px;
   display: block;
 
   @media (min-width: 641px) {
-    padding: 6px 32px;
+    padding: 8px 32px;
   }
 
   @media (min-width: 1024px) {
-    padding: 6px 110px;
+    padding: 8px 110px;
   }
 `;
 
@@ -61,7 +61,7 @@ export const FilterWrapper = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
-  padding: 10px 0;
+  padding: 0;
   border-radius: 8px;
   background: transparent;
   width: max-content;
@@ -69,6 +69,7 @@ export const FilterWrapper = styled.div`
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 `;
 
+/** Matches Projects tab `FiltersButton`. */
 export const FilterActionButton = styled.button`
   font-family: inherit;
   display: inline-flex;
@@ -76,29 +77,36 @@ export const FilterActionButton = styled.button`
   align-items: center;
   justify-content: center;
   gap: 7px;
-  border: 1px solid #d8e0e2;
+  border: 1px solid var(--color-brand);
   border-radius: 6px;
   background: #ffffff;
-  color: #5f6c72;
+  color: var(--color-brand);
   font-size: 13px;
   font-weight: 600;
   line-height: 1;
-  padding: 11px 16px;
-  min-height: 42px;
+  padding: 10px 14px;
+  min-height: 40px;
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 
   &:hover {
     background: var(--color-brand-soft);
-    border-color: #e2d5d8;
+    border-color: var(--color-brand);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
   }
 `;
 
 export const FilterActionIcon = styled.span`
   display: inline-flex;
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
   color: currentColor;
 
   svg {
@@ -109,36 +117,57 @@ export const FilterActionIcon = styled.span`
 export const SegmentGroup = styled.div`
   display: inline-flex;
   flex-shrink: 0;
-  align-items: center;
+  align-items: stretch;
   background: #ffffff;
   border: 1px solid #d8e0e2;
   border-radius: 6px;
   overflow: hidden;
 `;
 
+/** Selected state matches Projects tab city pills: soft tint, brand outline, same label color as Filters. */
 export const SegmentButton = styled.button`
   font-family: inherit;
   border: none;
   border-right: 1px solid #d8e0e2;
   background: ${({ $active }) =>
-    $active ? "var(--color-brand)" : "transparent"};
-  color: ${({ $active }) => ($active ? "#ffffff" : "#5f6c72")};
+    $active ? "var(--color-brand-soft)" : "transparent"};
+  color: ${({ $active }) => ($active ? "var(--color-brand)" : "#1f2937")};
+  box-shadow: ${({ $active }) =>
+    $active ? "inset 0 0 0 1px var(--color-brand)" : "none"};
   font-size: 13px;
   font-weight: 600;
   line-height: 1;
-  padding: 11px 16px;
-  min-height: 42px;
+  padding: 10px 14px;
+  min-height: 40px;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
   white-space: nowrap;
+  /* Radius on segments so inset shadow / fill follow the group curve (fixes square “All Type” corners). */
+  border-radius: 0;
+
+  &:first-child {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
 
   &:last-child {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
     border-right: none;
   }
 
   &:hover {
-    background: ${({ $active }) =>
-      $active ? "var(--color-brand)" : "var(--color-brand-soft)"};
+    background: var(--color-brand-soft);
+    color: var(--color-brand);
+    box-shadow: inset 0 0 0 1px var(--color-brand);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
   }
 `;
 
@@ -246,7 +275,8 @@ export const CityPill = styled.button`
 export const CityPillName = styled.span`
   font-size: 13px;
   font-weight: 600;
-  color: ${({ $selected }) => ($selected ? "var(--color-brand)" : "#2563eb")};
+  color: ${({ $selected }) =>
+    $selected ? "var(--color-brand)" : "#1f2937"};
   line-height: 1.2;
 `;
 

@@ -65,53 +65,53 @@ const RealEstateFilterOption = () => {
         <FilterSection>
             <FilterInner>
                 <FilterToolbarScroll aria-label={t("filtersToolbarAria")}>
-                <FilterWrapper>
-                    <FilterActionButton type="button" aria-label={t("filtersAria")}>
-                        <FilterActionIcon aria-hidden="true">
-                            <SearchIconSvg />
-                        </FilterActionIcon>
-                        {t("filters")}
-                    </FilterActionButton>
+                    <FilterWrapper>
+                        <FilterActionButton type="button" aria-label={t("filtersAria")}>
+                            <FilterActionIcon aria-hidden="true">
+                                <SearchIconSvg />
+                            </FilterActionIcon>
+                            {t("filters")}
+                        </FilterActionButton>
 
-                    <SegmentGroup>
-                        {listingOptionsFilter?.map((option) => (
+                        <SegmentGroup>
+                            {listingOptionsFilter?.map((option) => (
+                                <SegmentButton
+                                    key={option}
+                                    type="button"
+                                    $active={listingOptions === option}
+                                    onClick={() => dispatch(setListingOptions(option))}
+                                >
+                                    {option}
+                                </SegmentButton>
+                            ))}
+                        </SegmentGroup>
+
+                        <SegmentGroup>
+                            {propertyOptionsFilter?.map((option) => (
+                                <SegmentButton
+                                    key={option}
+                                    type="button"
+                                    $active={propertyOptions === option}
+                                    onClick={() => dispatch(setPropertyOptions(option))}
+                                >
+                                    {propertySegmentLabel(option, t)}
+                                </SegmentButton>
+                            ))}
+                        </SegmentGroup>
+
+                        <SegmentGroup>
                             <SegmentButton
-                                key={option}
+                                id="city-filter-toggle"
                                 type="button"
-                                $active={listingOptions === option}
-                                onClick={() => dispatch(setListingOptions(option))}
+                                $active={cityPanelOpen}
+                                aria-expanded={cityPanelOpen}
+                                aria-controls="city-filter-panel"
+                                onClick={() => setCityPanelOpen((open) => !open)}
                             >
-                                {option}
+                                {t("segment_city")}
                             </SegmentButton>
-                        ))}
-                    </SegmentGroup>
-
-                    <SegmentGroup>
-                        {propertyOptionsFilter?.map((option) => (
-                            <SegmentButton
-                                key={option}
-                                type="button"
-                                $active={propertyOptions === option}
-                                onClick={() => dispatch(setPropertyOptions(option))}
-                            >
-                                {propertySegmentLabel(option, t)}
-                            </SegmentButton>
-                        ))}
-                    </SegmentGroup>
-
-                    <SegmentGroup>
-                        <SegmentButton
-                            id="city-filter-toggle"
-                            type="button"
-                            $active={cityPanelOpen}
-                            aria-expanded={cityPanelOpen}
-                            aria-controls="city-filter-panel"
-                            onClick={() => setCityPanelOpen((open) => !open)}
-                        >
-                            {t("segment_city")}
-                        </SegmentButton>
-                    </SegmentGroup>
-                </FilterWrapper>
+                        </SegmentGroup>
+                    </FilterWrapper>
                 </FilterToolbarScroll>
             </FilterInner>
 

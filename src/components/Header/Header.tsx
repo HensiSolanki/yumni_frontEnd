@@ -44,7 +44,6 @@ export default function Header() {
     (state: { headerApiSlice: { headerTabOptions: number } }) =>
       state.headerApiSlice.headerTabOptions,
   );
-
   const fontUi =
     "font-[family-name:var(--font-inter),ui-sans-serif,system-ui,sans-serif]";
 
@@ -79,7 +78,7 @@ export default function Header() {
         </div>
 
         <nav
-          className="absolute left-1/2 z-10 hidden max-w-[min(520px,calc(100%-15rem))] -translate-x-1/2 items-center gap-3 md:flex md:gap-4 lg:max-w-none lg:gap-9"
+          className="absolute left-1/2 z-30 hidden max-w-[min(520px,calc(100%-15rem))] -translate-x-1/2 items-center gap-3 md:flex md:gap-4 lg:max-w-none lg:gap-9"
           aria-label={t("navMain")}
         >
           {MAIN_TABS.map(({ index, labelKey, Icon }) => {

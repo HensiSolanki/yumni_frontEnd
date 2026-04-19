@@ -17,6 +17,7 @@ import SaudiMapSilhouetteSvg from "./SaudiMapSilhouetteSvg.svg";
 import MenuIconSvg from "./MenuIconSvg.svg";
 import CloseIconSvg from "./CloseIconSvg.svg";
 import SearchIconSvg from "./SearchIcon.svg";
+import IconFilterSlidersSvg from "./IconFilterSlidersSvg.svg";
 
 export {
   IconArrowUpRightSvg,
@@ -38,4 +39,5 @@ export {
   MenuIconSvg,
   CloseIconSvg,
   SearchIconSvg,
+  IconFilterSlidersSvg,
 };

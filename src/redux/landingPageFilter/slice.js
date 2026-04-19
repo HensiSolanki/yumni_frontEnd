@@ -11,6 +11,8 @@ const initialState = {
     selectedCity: null,
     callNowPopupOpen: false,
     callNowPopupTargetId: null,
+    /** Project tab grid: id of the card last clicked (for active border). */
+    selectedProjectCardId: null,
     isLoading: false,
     error: null,
     cityFilterOptions: defaultCityFilterOptions,
@@ -37,6 +39,9 @@ const landingPageFilterSlice = createSlice({
         },
         setCallNowPopupTargetId: (state, { payload }) => {
             state.callNowPopupTargetId = payload;
+        },
+        setSelectedProjectCardId: (state, { payload }) => {
+            state.selectedProjectCardId = payload;
         },
         setCityFilterOptions: (state, { payload }) => {
             state.cityFilterOptions = payload;
@@ -81,6 +86,7 @@ export const {
     setSelectedCity,
     setCallNowPopupOpen,
     setCallNowPopupTargetId,
+    setSelectedProjectCardId,
     setCityFilterOptions,
     setIsLoading,
     setError,

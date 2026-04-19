@@ -101,6 +101,86 @@ export const realEstateCardDemoListings = [
     ...item,
 }));
 
+/** Default field values for `ProjectTabCardComponent` (vertical grid cards). */
+export const projectCardDefaultListing = {
+    id: "project-default",
+    tags: [
+        { label: "For sale", variant: "brand" },
+        { label: "Project", variant: "muted" },
+    ],
+    title: "Al Bahria Development",
+    location: "Hay Al Baria, Al Jolaan · Riyadh",
+    priceMain: "SAR 1.4M",
+    priceSub: "starts from",
+    features: [
+        { id: "beds", iconKey: "bed", text: "3 beds" },
+        { id: "baths", iconKey: "bath", text: "2 baths" },
+        { id: "area", iconKey: "ruler", text: "2,400 m²" },
+    ],
+    description:
+        "Prime units with flexible payment plans and handover Q4 2026. Register interest early.",
+    agentInitials: "MB",
+    agentName: "Metro Builders Co.",
+    listedAgo: "Listed 3 days ago",
+    photoLabel: "6 photos",
+};
+
+export const projectCardDemoListings = [
+    {
+        id: "proj-1",
+        title: "Al Bahria Development",
+        location: "Hay Al Baria, Al Jolaan · Riyadh",
+        tags: [
+            { label: "Warehouses", variant: "muted" },
+            { label: "Available", variant: "blue" },
+        ],
+        priceMain: "SAR 1.4M",
+        photoLabel: "6 photos",
+    },
+    {
+        id: "proj-2",
+        title: "Al Yasmin Residences",
+        location: "Al Yasmin · Riyadh",
+        tags: [
+            { label: "Apartments", variant: "brand" },
+            { label: "Ready", variant: "muted" },
+        ],
+        priceMain: "SAR 890K",
+        priceSub: "starts from",
+        features: [
+            { id: "beds", iconKey: "bed", text: "2 beds" },
+            { id: "baths", iconKey: "bath", text: "2 baths" },
+            { id: "area", iconKey: "ruler", text: "120 m²" },
+        ],
+        photoLabel: "12 photos",
+        listedAgo: "Listed 1 week ago",
+        agentInitials: "YR",
+        agentName: "Yumni Realty",
+        description:
+            "Family-focused community with parks, retail, and schools within walking distance.",
+    },
+    {
+        id: "proj-3",
+        title: "Olaya Business Tower",
+        location: "Al Olaya · Riyadh",
+        tags: [
+            { label: "Commercial", variant: "brand" },
+            { label: "Off-plan", variant: "muted" },
+        ],
+        priceMain: "SAR 2.1M",
+        priceSub: "from",
+        photoLabel: "8 photos",
+        listedAgo: "Listed today",
+        agentInitials: "OK",
+        agentName: "Olaya Key Development",
+        description:
+            "Grade-A office floors with dedicated parking and direct highway access.",
+    },
+].map((item) => ({
+    ...projectCardDefaultListing,
+    ...item,
+}));
+
 // realEstate filter options
 export const listingOptionsFilter = ["All", "Rent", "Sale"];
 export const propertyOptionsFilter = [
