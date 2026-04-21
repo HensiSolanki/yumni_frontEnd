@@ -107,7 +107,8 @@ const CityPopUpDialogContent = () => {
         if (!label) {
             return;
         }
-        dispatch(setDailyrentCity(label));
+        const selected = isCitySelected(cityId);
+        dispatch(setDailyrentCity(selected ? null : label));
         close();
     };
 

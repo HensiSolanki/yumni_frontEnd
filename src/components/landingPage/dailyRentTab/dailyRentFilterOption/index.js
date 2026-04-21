@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setCityPopUpOpen } from "@/redux/landingPageFilter/slice";
+import { setCityPopUpOpen, setFiltersPopUpOpen } from "@/redux/landingPageFilter/slice";
 
 import {
     FilterBar,
@@ -22,10 +22,17 @@ import {
     parseDateKey,
 } from "@/utils/globalFunctions";
 import CityPopUpModel from "../popUpModels/cityPopUp/index.js";
+import FiltersPopUp from "../popUpModels/filtersPopUp/index.js";
 
 const DailyRentFilterOption = () => {
     const dispatch = useDispatch();
-    const { dailyrentStartDate, dailyrentEndDate, cityPopUpOpen, dailyrentCity } =
+    const {
+        dailyrentStartDate,
+        dailyrentEndDate,
+        cityPopUpOpen,
+        dailyrentCity,
+        filtersPopUpOpen,
+    } =
         useSelector((state) => state.landingPageFilterSlice);
     const [calendarOpen, setCalendarOpen] = useState(false);
 
@@ -53,11 +60,14 @@ const DailyRentFilterOption = () => {
                     {dailyRentFilterOptions.map(({ id, label, icon: Icon }) => {
                         const isDateFilter = id === "date";
                         const isCityFilter = id === "city";
+                        const isMoreFilter = id === "filters";
                         const isActive = isDateFilter
                             ? dateFilterActive
                             : isCityFilter
                               ? cityPopUpOpen || Boolean(dailyrentCity)
-                              : false;
+                              : isMoreFilter
+                                ? filtersPopUpOpen
+                                : false;
                         const displayLabel = isDateFilter
                             ? formatDateChipLabel(
                                 selectedStartDate ?? today,
@@ -109,6 +119,25 @@ const DailyRentFilterOption = () => {
                             );
                         }
 
+                        if (isMoreFilter) {
+                            return (
+                                <FilterButton
+                                    key={id}
+                                    type="button"
+                                    $active={isActive}
+                                    $compact
+                                    aria-pressed={isActive}
+                                    aria-expanded={filtersPopUpOpen}
+                                    onClick={() => dispatch(setFiltersPopUpOpen(true))}
+                                >
+                                    <FilterButtonIcon aria-hidden="true">
+                                        <Icon />
+                                    </FilterButtonIcon>
+                                    <FilterButtonText>{displayLabel}</FilterButtonText>
+                                </FilterButton>
+                            );
+                        }
+
                         return (
                             <FilterButton
                                 key={id}
@@ -132,6 +161,7 @@ const DailyRentFilterOption = () => {
                 onClose={() => setCalendarOpen(false)}
             />
             <CityPopUpModel />
+            <FiltersPopUp />
         </FilterSection>
     );
 };

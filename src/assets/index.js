@@ -22,6 +22,15 @@ import MenuIconSvg from "./MenuIconSvg.svg";
 import CloseIconSvg from "./CloseIconSvg.svg";
 import SearchIconSvg from "./SearchIcon.svg";
 import IconFilterSlidersSvg from "./IconFilterSlidersSvg.svg";
+import IconApartmentBookingSvg from "./IconApartmentBookingSvg.svg";
+import IconCampingBookingSvg from "./IconCampingBookingSvg.svg";
+import IconBookingFurnishedApartmentSvg from "./IconBookingFurnishedApartmentSvg.svg";
+import IconBookingFurnishedVillaSvg from "./IconBookingFurnishedVillaSvg.svg";
+import IconBookingFurnishedStudioSvg from "./IconBookingFurnishedStudioSvg.svg";
+import IconBookingChaletSvg from "./IconBookingChaletSvg.svg";
+import IconBookingCampSvg from "./IconBookingCampSvg.svg";
+import IconBookingFarmSvg from "./IconBookingFarmSvg.svg";
+import IconBookingHallSvg from "./IconBookingHallSvg.svg";
 
 export {
   IconArrowUpRightSvg,
@@ -48,4 +57,13 @@ export {
   CloseIconSvg,
   SearchIconSvg,
   IconFilterSlidersSvg,
+  IconApartmentBookingSvg,
+  IconCampingBookingSvg,
+  IconBookingFurnishedApartmentSvg,
+  IconBookingFurnishedVillaSvg,
+  IconBookingFurnishedStudioSvg,
+  IconBookingChaletSvg,
+  IconBookingCampSvg,
+  IconBookingFarmSvg,
+  IconBookingHallSvg,
 };

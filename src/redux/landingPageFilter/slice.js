@@ -31,6 +31,7 @@ const initialState = {
     /** `null` until the user picks a city in the daily-rent city modal (chip shows "Choose city"). */
     dailyrentCity: null,
     cityPopUpOpen: false,
+    filtersPopUpOpen: false,
     selectedCityPopUpOptions: null,
 };
 
@@ -71,6 +72,9 @@ const landingPageFilterSlice = createSlice({
         },
         setCityPopUpOpen: (state, { payload }) => {
             state.cityPopUpOpen = payload;
+        },
+        setFiltersPopUpOpen: (state, { payload }) => {
+            state.filtersPopUpOpen = payload;
         },
         setDailyrentCity: (state, { payload }) => {
             state.dailyrentCity = payload;
@@ -123,6 +127,7 @@ export const {
     setDailyrentStartDate,
     setDailyrentEndDate,
     setDailyrentCity,
+    setFiltersPopUpOpen,
     setSelectedCityPopUpOptions,
     setCityPopUpOpen,
     setIsLoading,
