@@ -16,6 +16,12 @@
     "navMobile": "Mobile Main",
     "ariaMapSearch": "Map Search",
     "ariaAddListing": "Add Listing",
+    "addMenuTitle": "What would you like to add?",
+    "addMenuCloseAria": "Close",
+    "addMenuListingTitle": "Real estate listing",
+    "addMenuListingSub": "Sale or rent",
+    "addMenuRequestTitle": "Property request",
+    "addMenuRequestSub": "Get notified",
     "languageNav": "Language"
   },
   "Pages": {
@@ -23,7 +29,26 @@
     "mapTitle": "Map Search",
     "addListingTitle": "Add listing",
     "dailyRentTitle": "Daily Rent",
-    "projectsTitle": "Projects"
+    "projectsTitle": "Projects",
+    "addListingFlow": {
+      "roleGroupLabel": "Your role",
+      "role": {
+        "broker": "Broker",
+        "owner": "Owner",
+        "host": "Host"
+      },
+      "listTypeHeading": "What are you trying to list?",
+      "option1": {
+        "hint": "List a property from owner / representative",
+        "title": "With license issuance through Aqar platform",
+        "badge": "License required"
+      },
+      "option2": {
+        "hint": "Property marketing request",
+        "title": "Request marketing from real estate agents",
+        "badge": "No license"
+      }
+    }
   },
   "Footer": {
     "ariaLabel": "Site footer",

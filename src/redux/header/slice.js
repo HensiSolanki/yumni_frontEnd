@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     headerTabOptions: 0,
+    addButtonPopUp:false,
     isLoading: false,
     error: null,
 };
@@ -12,6 +13,9 @@ const headerApiSlice = createSlice({
     reducers: {
         setHeaderTabOptions: (state, { payload }) => {
             state.headerTabOptions = payload;
+        },
+        setAddButtonPopUp: (state, { payload }) => {
+            state.addButtonPopUp = payload;
         },
         setIsLoading: (state, { payload }) => {
             state.isLoading = payload;
@@ -49,6 +53,7 @@ export const headerApiSliceReducer = headerApiSlice.reducer;
 
 export const {
     setHeaderTabOptions,
+    setAddButtonPopUp,
     setIsLoading,
     setError
 } = headerApiSlice.actions;

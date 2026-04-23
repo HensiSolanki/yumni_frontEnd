@@ -16,6 +16,12 @@
     "navMobile": "القائمة الرئيسية — الجوال",
     "ariaMapSearch": "البحث على الخريطة",
     "ariaAddListing": "إضافة إعلان",
+    "addMenuTitle": "ماذا تريد أن تضيف؟",
+    "addMenuCloseAria": "إغلاق",
+    "addMenuListingTitle": "إعلان عقاري",
+    "addMenuListingSub": "بيع أو إيجار",
+    "addMenuRequestTitle": "طلب عقار",
+    "addMenuRequestSub": "تلقي إشعارات",
     "languageNav": "اللغة"
   },
   "Pages": {
@@ -23,7 +29,26 @@
     "mapTitle": "البحث على الخريطة",
     "addListingTitle": "إضافة إعلان",
     "dailyRentTitle": "الإيجار اليومي",
-    "projectsTitle": "المشاريع"
+    "projectsTitle": "المشاريع",
+    "addListingFlow": {
+      "roleGroupLabel": "صفة المستخدم",
+      "role": {
+        "broker": "وسيط",
+        "owner": "مالك",
+        "host": "مضيف"
+      },
+      "listTypeHeading": "ماذا تريد أن تدرج؟",
+      "option1": {
+        "hint": "إدراج عقار بصفة مالك / وكيل",
+        "title": "إصدار ترخيص عبر منصة عقار",
+        "badge": "يتطلب ترخيصًا"
+      },
+      "option2": {
+        "hint": "طلب تسويق عقاري",
+        "title": "طلب تسويق من وسطاء عقاريين",
+        "badge": "دون ترخيص"
+      }
+    }
   },
   "Footer": {
     "ariaLabel": "تذييل الموقع",

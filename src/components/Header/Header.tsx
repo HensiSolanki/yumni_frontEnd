@@ -12,14 +12,17 @@ import {
   IconUserFramedSvg,
   SaudiMapSilhouetteSvg,
 } from "@/assets";
+import AddButtonPopUp from "@/components/Header/AddButtonPopUp/AddButtonPopUp";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import { Link } from "@/i18n/navigation";
-import { setHeaderTabOptions } from "@/redux/header/slice";
+import { Link, useRouter } from "@/i18n/navigation";
+import { setAddButtonPopUp, setHeaderTabOptions } from "@/redux/header/slice";
 
 type TabIcon = FC<{ className?: string }>;
 
-type RightLink = {
-  href: string;
+type RightItem = {
+  key: string;
+  path?: "/map" | "/login";
+  openAddPopup?: boolean;
   labelKey?: "mapSearch" | "addListing";
   Icon?: TabIcon;
   framedIcon?: boolean;
@@ -31,14 +34,15 @@ const MAIN_TABS = [
   { index: 2, labelKey: "dailyRent" as const, Icon: IconCalendarSvg },
 ] as const;
 
-const RIGHT: RightLink[] = [
-  { href: "/map", labelKey: "mapSearch", Icon: IconMapFoldedSvg },
-  { href: "/add-listing", labelKey: "addListing" },
-  { href: "/login", Icon: IconUserFramedSvg, framedIcon: true },
+const RIGHT: RightItem[] = [
+  { key: "map", path: "/map", labelKey: "mapSearch", Icon: IconMapFoldedSvg },
+  { key: "add", openAddPopup: true, labelKey: "addListing" },
+  { key: "login", path: "/login", Icon: IconUserFramedSvg, framedIcon: true },
 ];
 
 export default function Header() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const t = useTranslations("Header");
   const activeTab = useSelector(
     (state: { headerApiSlice: { headerTabOptions: number } }) =>
@@ -89,10 +93,10 @@ export default function Header() {
                 type="button"
                 onClick={() => dispatch(setHeaderTabOptions(index))}
                 className={[
-                  "flex shrink-0 items-center gap-1.5 border-b-2 pb-1 text-[12px] transition-colors sm:gap-2 sm:text-[13px] lg:text-[14px]",
+                  "flex shrink-0 items-center gap-1.5 border-b-2 pb-1 text-[12px] transition-colors sm:gap-2 sm:text-[13px] lg:text-[14px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm",
                   active
                     ? "border-brand text-brand"
-                    : "border-transparent text-muted hover:text-neutral-700",
+                    : "border-transparent text-muted hover:border-brand/40 hover:text-brand",
                 ].join(" ")}
               >
                 <Icon className="shrink-0" />
@@ -106,17 +110,24 @@ export default function Header() {
           <LanguageSwitcher />
           {RIGHT.map((item) => {
             const Icon = item.Icon;
-            const isLogin = item.href === "/login";
+            const isLogin = item.path === "/login";
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex items-center gap-1.5 text-muted transition-opacity hover:opacity-80"
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => {
+                  if (item.openAddPopup) {
+                    dispatch(setAddButtonPopUp(true));
+                  } else if (item.path) {
+                    router.push(item.path);
+                  }
+                }}
+                className="group flex items-center gap-1.5 rounded-md text-muted transition-colors hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25"
                 aria-label={isLogin ? t("login") : undefined}
               >
                 {Icon ? (
                   item.framedIcon ? (
-                    <span className="inline-flex rounded border border-neutral-300/90 p-[3px] text-muted">
+                    <span className="inline-flex rounded border border-neutral-300/90 p-[3px] text-muted transition-colors group-hover:border-brand/45 group-hover:text-brand">
                       <Icon className="shrink-0" />
                     </span>
                   ) : (
@@ -126,36 +137,39 @@ export default function Header() {
                 {item.labelKey ? (
                   <span className="leading-tight">{t(item.labelKey)}</span>
                 ) : null}
-              </Link>
+              </button>
             );
           })}
         </div>
 
         <div className="flex flex-1 items-center justify-end gap-1.5 md:hidden">
           <LanguageSwitcher />
-          <Link
-            href="/map"
-            className="rounded p-1.5 text-muted transition-opacity hover:opacity-80"
+          <button
+            type="button"
+            onClick={() => router.push("/map")}
+            className="group rounded p-1.5 text-muted transition-colors hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25"
             aria-label={t("ariaMapSearch")}
           >
             <IconMapFoldedSvg className="h-[1.15rem] w-[1.15rem] shrink-0" />
-          </Link>
-          <Link
-            href="/add-listing"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-brand text-xl leading-none text-white transition-opacity hover:opacity-90"
+          </button>
+          <button
+            type="button"
+            onClick={() => dispatch(setAddButtonPopUp(true))}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-brand text-xl leading-none text-white transition-[filter,box-shadow] hover:brightness-105 hover:shadow-[0_4px_16px_rgba(206,17,38,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25 active:brightness-95"
             aria-label={t("ariaAddListing")}
           >
             +
-          </Link>
-          <Link
-            href="/login"
-            className="rounded p-1.5 text-muted transition-opacity hover:opacity-80"
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/login")}
+            className="group rounded p-1.5 text-muted transition-colors hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25"
             aria-label={t("login")}
           >
-            <span className="inline-flex rounded border border-neutral-300/90 p-[2px] text-muted">
+            <span className="inline-flex rounded border border-neutral-300/90 p-[2px] text-muted transition-colors group-hover:border-brand/45 group-hover:text-brand">
               <IconUserFramedSvg className="h-[1.15rem] w-[1.15rem] shrink-0" />
             </span>
-          </Link>
+          </button>
         </div>
       </div>
 
@@ -172,10 +186,10 @@ export default function Header() {
                 type="button"
                 onClick={() => dispatch(setHeaderTabOptions(index))}
                 className={[
-                  "flex flex-1 items-center justify-center gap-2 border-b-[3px] px-1 py-3 text-[0.95rem] font-medium transition-colors",
+                  "flex flex-1 items-center justify-center gap-2 border-b-[3px] px-1 py-3 text-[0.95rem] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25 focus-visible:ring-inset",
                   active
                     ? "border-brand text-brand"
-                    : "border-transparent text-[#3f3f46]",
+                    : "border-transparent text-[#3f3f46] hover:border-brand/45 hover:text-brand",
                 ].join(" ")}
               >
                 <Icon className="shrink-0" />
@@ -185,6 +199,8 @@ export default function Header() {
           })}
         </nav>
       </div>
+
+      <AddButtonPopUp />
     </header>
   );
 }
