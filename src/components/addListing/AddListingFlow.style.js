@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
-type WithActive = {
-  $active?: boolean;
-};
+
 
 /**
  * Same horizontal shell as real-estate cards and filter bar:
@@ -49,7 +47,7 @@ export const RoleRow = styled.div`
   }
 `;
 
-export const RoleCard = styled.button<WithActive>`
+export const RoleCard = styled.button`
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   display: flex;
   flex-direction: column;
@@ -117,7 +115,7 @@ export const ListingStack = styled.div`
   gap: 12px;
 `;
 
-export const ListingOption = styled.button<WithActive>`
+export const ListingOption = styled.button`
   position: relative;
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   display: flex;
@@ -177,6 +175,24 @@ export const StepBadge = styled.span`
   font-size: 15px;
   font-weight: 700;
   border: 1px solid rgba(206, 17, 38, 0.2);
+`;
+
+export const ListingIconTile = styled.span`
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #e8f1ff;
+  color: #4f8fe4;
+  border: 1px solid #cddff9;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 `;
 
 export const ListingTextBlock = styled.div`

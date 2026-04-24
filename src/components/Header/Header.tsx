@@ -91,6 +91,7 @@ export default function Header() {
               <button
                 key={index}
                 type="button"
+                suppressHydrationWarning
                 onClick={() => dispatch(setHeaderTabOptions(index))}
                 className={[
                   "flex shrink-0 items-center gap-1.5 border-b-2 pb-1 text-[12px] transition-colors sm:gap-2 sm:text-[13px] lg:text-[14px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-sm",
@@ -115,6 +116,7 @@ export default function Header() {
               <button
                 key={item.key}
                 type="button"
+                suppressHydrationWarning
                 onClick={() => {
                   if (item.openAddPopup) {
                     dispatch(setAddButtonPopUp(true));
@@ -146,6 +148,7 @@ export default function Header() {
           <LanguageSwitcher />
           <button
             type="button"
+            suppressHydrationWarning
             onClick={() => router.push("/map")}
             className="group rounded p-1.5 text-muted transition-colors hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25"
             aria-label={t("ariaMapSearch")}
@@ -154,6 +157,7 @@ export default function Header() {
           </button>
           <button
             type="button"
+            suppressHydrationWarning
             onClick={() => dispatch(setAddButtonPopUp(true))}
             className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-brand text-xl leading-none text-white transition-[filter,box-shadow] hover:brightness-105 hover:shadow-[0_4px_16px_rgba(206,17,38,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25 active:brightness-95"
             aria-label={t("ariaAddListing")}
@@ -162,6 +166,7 @@ export default function Header() {
           </button>
           <button
             type="button"
+            suppressHydrationWarning
             onClick={() => router.push("/login")}
             className="group rounded p-1.5 text-muted transition-colors hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25"
             aria-label={t("login")}
@@ -184,6 +189,7 @@ export default function Header() {
               <button
                 key={index}
                 type="button"
+                suppressHydrationWarning
                 onClick={() => dispatch(setHeaderTabOptions(index))}
                 className={[
                   "flex flex-1 items-center justify-center gap-2 border-b-[3px] px-1 py-3 text-[0.95rem] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25 focus-visible:ring-inset",

@@ -1,7 +1,6 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState, type ReactNode } from "react";
 
 import {
   ChevronWrap,
@@ -21,9 +20,8 @@ import {
   StatusPill,
   StepBadge,
 } from "./AddListingFlow.style";
-
-type RoleId = "broker" | "owner" | "host";
-type ListingKind = "licensed" | "marketing";
+import { useDispatch, useSelector } from "react-redux";
+import { setListingKind, setRole } from "@/redux/addlisting/slice";
 
 function IconBriefcase() {
   return (
@@ -105,22 +103,19 @@ function IconChevron() {
   );
 }
 
-const ROLES: { id: RoleId; icon: ReactNode }[] = [
+const ROLES = [
   { id: "broker", icon: <IconBriefcase /> },
   { id: "owner", icon: <IconOwner /> },
   { id: "host", icon: <IconHouse /> },
 ];
 
-const ROLE_LABEL_KEY: Record<RoleId, "addListingFlow.role.broker" | "addListingFlow.role.owner" | "addListingFlow.role.host"> = {
-  broker: "addListingFlow.role.broker",
-  owner: "addListingFlow.role.owner",
-  host: "addListingFlow.role.host",
-};
-
 export default function AddListingFlow() {
   const t = useTranslations("Pages");
-  const [role, setRole] = useState<RoleId>("owner");
-  const [listingKind, setListingKind] = useState<ListingKind>("licensed");
+  const dispatch = useDispatch();
+  const addListingState = useSelector((state)=>state.addListingApiSlice);
+  const role = addListingState.role;
+  const listingKind = addListingState.listingKind;
+  console.log("role=====>",listingKind);
 
   return (
     <PageShell>
@@ -132,21 +127,24 @@ export default function AddListingFlow() {
             key={id}
             type="button"
             $active={role === id}
-            onClick={() => setRole(id)}
+            onClick={() => {dispatch(setRole(id)),dispatch((id == "broker" || id == "owner") ? setListingKind("licensed") : setListingKind("dailyMonthly"))}}
             aria-pressed={role === id}
           >
             <RoleIconWrap>{icon}</RoleIconWrap>
-            <RoleLabel>{t(ROLE_LABEL_KEY[id])}</RoleLabel>
+            <RoleLabel>{id}</RoleLabel>
           </RoleCard>
         ))}
       </RoleRow>
-
+      {role !== "null" && (
+        <>
       <ListSectionTitle>{t("addListingFlow.listTypeHeading")}</ListSectionTitle>
+     
       <ListingStack>
+      {(role ==="broker" || role === "owner") && (
         <ListingOption
           type="button"
           $active={listingKind === "licensed"}
-          onClick={() => setListingKind("licensed")}
+          onClick={() => dispatch(setListingKind("licensed"))}
           aria-pressed={listingKind === "licensed"}
         >
           <StepBadge>1</StepBadge>
@@ -161,11 +159,12 @@ export default function AddListingFlow() {
             </ChevronWrap>
           </ListingRight>
         </ListingOption>
-
+      )}
+      {role === "owner" && (
         <ListingOption
           type="button"
           $active={listingKind === "marketing"}
-          onClick={() => setListingKind("marketing")}
+          onClick={() => dispatch(setListingKind("marketing"))}
           aria-pressed={listingKind === "marketing"}
         >
           <StepBadge>2</StepBadge>
@@ -180,7 +179,31 @@ export default function AddListingFlow() {
             </ChevronWrap>
           </ListingRight>
         </ListingOption>
+        )}
+      {role === "host" && (
+        <ListingOption
+          type="button"
+          $active={listingKind === "dailyMonthly"}
+          onClick={() => dispatch(setListingKind("dailyMonthly"))}
+          aria-pressed={listingKind === "dailyMonthly"}
+        >
+          <StepBadge>1</StepBadge>
+          <ListingTextBlock>
+            <ListingTitle>Unit for daily/monthly rental</ListingTitle>
+            <ListingHint>
+              Allows users to book and pay directly through Aqar
+            </ListingHint>
+          </ListingTextBlock>
+          <ListingRight>
+            <ChevronWrap>
+              <IconChevron />
+            </ChevronWrap>
+          </ListingRight>
+        </ListingOption>
+      )}
       </ListingStack>
+      </>
+      )}
     </PageShell>
   );
 }
