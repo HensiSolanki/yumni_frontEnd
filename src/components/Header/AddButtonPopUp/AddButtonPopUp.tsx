@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { useDispatch, useSelector } from "react-redux";
 
 import { CloseIconSvg } from "@/assets";
-import { setAddButtonPopUp } from "@/redux/header/slice";
+import { setAddButtonPopUp, setHeaderTabOptions } from "@/redux/header/slice";
 
 import {
   CloseBtn,
@@ -65,6 +65,8 @@ export default function AddButtonPopUp() {
   );
 
   const handleRealEstateClick = () => {
+    dispatch(setHeaderTabOptions(null));
+    dispatch(setAddButtonPopUp(false));
     close();
     router.push("/add-listing");
   };
