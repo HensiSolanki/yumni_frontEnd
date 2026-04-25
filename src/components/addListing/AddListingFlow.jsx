@@ -115,7 +115,6 @@ export default function AddListingFlow() {
   const addListingState = useSelector((state)=>state.addListingApiSlice);
   const role = addListingState.role;
   const listingKind = addListingState.listingKind;
-  console.log("role=====>",listingKind);
 
   return (
     <PageShell>
@@ -191,7 +190,7 @@ export default function AddListingFlow() {
           <ListingTextBlock>
             <ListingTitle>Unit for daily/monthly rental</ListingTitle>
             <ListingHint>
-              Allows users to book and pay directly through Aqar
+              Allows users to book and pay directly through Property 973
             </ListingHint>
           </ListingTextBlock>
           <ListingRight>
