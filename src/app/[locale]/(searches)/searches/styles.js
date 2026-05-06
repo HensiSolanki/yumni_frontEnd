@@ -32,6 +32,8 @@ export const ContentShell = styled.div`
 export const TopFilterBar = styled.div`
     display: flex;
     align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
     gap: 10px;
     overflow-x: auto;
     overflow-y: hidden;
@@ -40,35 +42,42 @@ export const TopFilterBar = styled.div`
     -webkit-overflow-scrolling: touch;
 `;
 
-export const SegmentRow = styled.div`
-    display: flex;
-    align-items: stretch;
-    gap: 0;
-    width: fit-content;
-    border: 1px solid #d8e0e2;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #ffffff;
+export const FilterSelectWrap = styled.div`
+    position: relative;
+    display: inline-block;
+    min-width: min(200px, 100%);
 `;
 
-export const SegmentButton = styled.button`
+export const FilterSelectChevron = styled.span`
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #6b7280;
+    font-size: 16px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+export const FilterSelect = styled.select`
+    appearance: none;
     font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-    border: none;
-    border-right: 1px solid #d8e0e2;
-    background: ${({ $active }) =>
-        $active ? "var(--color-brand-soft)" : "transparent"};
-    color: ${({ $active }) => ($active ? "var(--color-brand)" : "#374151")};
+    width: 100%;
+    min-width: 180px;
+    border: 1px solid #d8e0e2;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #374151;
     font-size: 15px;
     font-weight: 600;
     line-height: 1;
     min-height: 42px;
-    padding: 0 20px;
+    padding: 0 36px 0 18px;
     cursor: pointer;
-    white-space: nowrap;
-
-    &:last-child {
-        border-right: none;
-    }
+    box-sizing: border-box;
 
     &:focus-visible {
         outline: 2px solid var(--color-brand);

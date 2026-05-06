@@ -34,6 +34,7 @@ import IconBookingHallSvg from "./IconBookingHallSvg.svg";
 import IconBookingSwimmingPoolSvg from "./IconBookingSwimmingPoolSvg.svg";
 import IconBriefcaseSvg from "./IconBriefcaseSvg.svg";
 import IconChevronRightSvg from "./IconChevronRightSvg.svg";
+import IconHomeSearchSvg from "./IconHomeSearchSvg.svg";
 import IconHouseLineSvg from "./IconHouseLineSvg.svg";
 import IconOwnerRoleSvg from "./IconOwnerRoleSvg.svg";
 import IconAddMenuListingHouseSvg from "./IconAddMenuListingHouseSvg.svg";
@@ -77,6 +78,7 @@ export {
   IconBookingSwimmingPoolSvg,
   IconBriefcaseSvg,
   IconChevronRightSvg,
+  IconHomeSearchSvg,
   IconHouseLineSvg,
   IconOwnerRoleSvg,
   IconAddMenuListingHouseSvg,
