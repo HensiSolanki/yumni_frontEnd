@@ -60,7 +60,10 @@ export default function Header() {
           <button
             type="button"
             suppressHydrationWarning
-            onClick={() => router.push("/")}
+            onClick={() => {
+              dispatch(setHeaderTabOptions(0));
+              router.push("/");
+            }}
             className="flex shrink-0 items-center gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-brand/25"
           >
             <Image
