@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-const mobileRegex = /^(\+966\s?)?5\d{8}$/;
+const mobileRegex = /^(\+966\s?)?0?5\d{8}$/;
 
 export const loginSchema = yup.object({
   fullName: yup
@@ -12,9 +12,19 @@ export const loginSchema = yup.object({
     .string()
     .trim()
     .required("Mobile number is required")
-    .matches(mobileRegex, "Enter a valid mobile number"),
+    .matches(mobileRegex, "Enter a valid Saudi mobile number"),
   password: yup
     .string()
     .required("Password is required")
-    .min(8, "Password must be at least 8 characters"),
+    .min(6, "Password must be at least 6 characters"),
 });
+
+export const otpSchema = yup.object({
+  otp: yup
+    .string()
+    .trim()
+    .required("OTP is required")
+    .matches(/^\d{6}$/, "Enter the 6-digit code"),
+});
+
+export const registerSchema = loginSchema;

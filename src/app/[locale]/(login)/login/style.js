@@ -128,6 +128,41 @@ export const PrimaryButton = styled.button.attrs({
   font-weight: 600;
   padding: 11px 12px;
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+`;
+
+export const SecondaryButton = styled.button.attrs({
+  suppressHydrationWarning: true,
+})`
+  width: 100%;
+  margin-top: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: transparent;
+  color: #eadce0;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 9px 12px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+`;
+
+export const FooterLink = styled.a`
+  display: block;
+  margin-top: 12px;
+  text-align: center;
+  font-size: 12px;
+  color: #cfbec3;
+  text-decoration: underline;
+  cursor: pointer;
 `;
 
 export const DividerRow = styled.div`

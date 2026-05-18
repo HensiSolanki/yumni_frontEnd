@@ -1,9 +1,11 @@
 "use client";
 
 import type { FC } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 import {
   IconBuildingSvg,
@@ -16,6 +18,12 @@ import AddButtonPopUp from "@/components/Header/AddButtonPopUp/AddButtonPopUp";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useRouter } from "@/i18n/navigation";
 import { setAddButtonPopUp, setHeaderTabOptions } from "@/redux/header/slice";
+import { logoutUser } from "@/redux/auth/services";
+import {
+  AUTH_CHANGED,
+  clearAuthSession,
+  getAuthSession,
+} from "@/utils/authSession";
 
 type TabIcon = FC<{ className?: string }>;
 
@@ -44,12 +52,37 @@ export default function Header() {
   const dispatch = useDispatch();
   const router = useRouter();
   const t = useTranslations("Header");
+  const [session, setSession] = useState(null);
+
+  const refreshSession = useCallback(() => {
+    setSession(getAuthSession());
+  }, []);
+
+  useEffect(() => {
+    refreshSession();
+    window.addEventListener(AUTH_CHANGED, refreshSession);
+    return () => window.removeEventListener(AUTH_CHANGED, refreshSession);
+  }, [refreshSession]);
+
+  const handleLogout = async () => {
+    const current = getAuthSession();
+    if (current?.refreshToken) {
+      await logoutUser({ refreshToken: current.refreshToken });
+    }
+    clearAuthSession();
+    setSession(null);
+    toast.success("Signed out.");
+    router.push("/");
+  };
+
   const activeTab = useSelector(
     (state: { headerApiSlice: { headerTabOptions: number } }) =>
       state.headerApiSlice.headerTabOptions,
   );
   const fontUi =
     "font-[family-name:var(--font-inter),ui-sans-serif,system-ui,sans-serif]";
+  const isLoggedIn = Boolean(session?.token);
+  const displayName = session?.user?.fullName || session?.user?.name || "";
 
   return (
     <header
@@ -111,6 +144,25 @@ export default function Header() {
           {RIGHT.map((item) => {
             const Icon = item.Icon;
             const isLogin = item.path === "/login";
+
+            if (isLogin && isLoggedIn) {
+              return (
+                <div key={item.key} className="flex items-center gap-2">
+                  <span className="max-w-[120px] truncate text-brand">
+                    {displayName}
+                  </span>
+                  <button
+                    type="button"
+                    suppressHydrationWarning
+                    onClick={handleLogout}
+                    className="rounded-md text-muted transition-colors hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              );
+            }
+
             return (
               <button
                 key={item.key}
@@ -164,20 +216,32 @@ export default function Header() {
           >
             +
           </button>
-          <button
-            type="button"
-            suppressHydrationWarning
-            onClick={() => {
-              router.push("/login");
-              dispatch(setHeaderTabOptions(null));
-            }}
-            className="group rounded p-1.5 text-muted transition-colors hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25"
-            aria-label={t("login")}
-          >
-            <span className="inline-flex rounded border border-neutral-300/90 p-[2px] text-muted transition-colors group-hover:border-brand/45 group-hover:text-brand">
-              <IconUserFramedSvg className="h-[1.15rem] w-[1.15rem] shrink-0" />
-            </span>
-          </button>
+          {isLoggedIn ? (
+            <button
+              type="button"
+              suppressHydrationWarning
+              onClick={handleLogout}
+              className="rounded px-2 py-1 text-xs text-brand"
+              aria-label="Sign out"
+            >
+              Sign out
+            </button>
+          ) : (
+            <button
+              type="button"
+              suppressHydrationWarning
+              onClick={() => {
+                router.push("/login");
+                dispatch(setHeaderTabOptions(null));
+              }}
+              className="group rounded p-1.5 text-muted transition-colors hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/25"
+              aria-label={t("login")}
+            >
+              <span className="inline-flex rounded border border-neutral-300/90 p-[2px] text-muted transition-colors group-hover:border-brand/45 group-hover:text-brand">
+                <IconUserFramedSvg className="h-[1.15rem] w-[1.15rem] shrink-0" />
+              </span>
+            </button>
+          )}
         </div>
       </div>
 

@@ -41,7 +41,10 @@ export const axiosPost = async (
       }
     }
     response.status = false;
-    response.message = e?.response?.data?.errors[0] || "something went wrong";
+    response.message =
+      e?.response?.data?.message ||
+      e?.response?.data?.errors?.[0] ||
+      "something went wrong";
     response.data = e?.response?.data || e;
     if (e?.response?.data?.isBanned == true) {
       banAccount(e?.response?.data);
@@ -121,10 +124,12 @@ export const axiosPatch = async (
 
 export const axiosPut = async (url, data, contentType = "application/json") => {
   let response = {};
+  const user = getData("user");
   try {
     const result = await axiosInstance.put(url, data, {
       headers: {
         "Content-Type": contentType,
+        Authorization: user?.token ? `Bearer ${user.token}` : null,
       },
     });
     response = result.data;
