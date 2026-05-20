@@ -1,8 +1,8 @@
 import * as yup from "yup";
 
-const mobileRegex = /^(\+966\s?)?5\d{8}$/;
+const mobileRegex = /^(\+966\s?)?\d{10}$/;
 
-export const loginSchema = yup.object({
+const authFields = {
   fullName: yup
     .string()
     .trim()
@@ -17,4 +17,22 @@ export const loginSchema = yup.object({
     .string()
     .required("Password is required")
     .min(8, "Password must be at least 8 characters"),
+};
+
+export const loginSchema = yup.object(authFields);
+
+export const registerSchema = yup.object(authFields);
+
+const singleOtpDigit = yup
+  .string()
+  .required("Required")
+  .matches(/^\d$/, "Enter one digit");
+
+export const otpSchema = yup.object({
+  digit1: singleOtpDigit,
+  digit2: singleOtpDigit,
+  digit3: singleOtpDigit,
+  digit4: singleOtpDigit,
+  digit5: singleOtpDigit,
+  digit6: singleOtpDigit,
 });

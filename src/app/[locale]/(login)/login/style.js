@@ -130,6 +130,30 @@ export const PrimaryButton = styled.button.attrs({
   cursor: pointer;
 `;
 
+export const ModeToggleRow = styled.p`
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 12px;
+  color: #cfbec3;
+`;
+
+export const ModeToggleButton = styled.button`
+  border: 0;
+  background: none;
+  padding: 0;
+  margin-left: 4px;
+  color: var(--color-brand);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:hover {
+    color: #fff;
+  }
+`;
+
 export const DividerRow = styled.div`
   display: flex;
   align-items: center;

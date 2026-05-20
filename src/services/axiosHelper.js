@@ -1,4 +1,4 @@
-import { PATH_AUTH } from "@/routes/paths";
+import { PATH_AUTH } from "@/routes/path";
 import axiosInstance from "@/utils/axios";
 import { getData } from "@/utils/storage";
 import { toast } from "react-toastify";
@@ -29,6 +29,11 @@ export const axiosPost = async (
     });
     response.data = result?.data || result?.data?.data;
     response.status = result?.status;
+    if (result?.data?.success === false) {
+      response.status = false;
+      response.message =
+        result?.data?.message || "something went wrong";
+    }
   } catch (e) {
     if (!e.response?.data?.success) {
       if (e.response?.status === 401) {
@@ -41,7 +46,10 @@ export const axiosPost = async (
       }
     }
     response.status = false;
-    response.message = e?.response?.data?.errors[0] || "something went wrong";
+    response.message =
+      e?.response?.data?.message ||
+      e?.response?.data?.errors?.[0] ||
+      "something went wrong";
     response.data = e?.response?.data || e;
     if (e?.response?.data?.isBanned == true) {
       banAccount(e?.response?.data);
