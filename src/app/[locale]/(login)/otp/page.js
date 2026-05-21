@@ -141,7 +141,7 @@ const OtpPage = () => {
       ).unwrap();
 
       if (response?.success === true) {
-        router.push(PATH_AUTH.root);
+        router.push(PATH_AUTH.myProfile);
       }
     } catch (error) {
       console.error("OTP error:", error);

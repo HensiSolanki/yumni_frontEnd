@@ -33,9 +33,13 @@ import IconBookingFarmSvg from "./IconBookingFarmSvg.svg";
 import IconBookingHallSvg from "./IconBookingHallSvg.svg";
 import IconBookingSwimmingPoolSvg from "./IconBookingSwimmingPoolSvg.svg";
 import IconBriefcaseSvg from "./IconBriefcaseSvg.svg";
+import IconBellSvg from "./IconBellSvg.svg";
+import IconChevronDownSvg from "./IconChevronDownSvg.svg";
 import IconChevronRightSvg from "./IconChevronRightSvg.svg";
+import IconProperty973PinSvg from "./IconProperty973PinSvg.svg";
 import IconHomeSearchSvg from "./IconHomeSearchSvg.svg";
 import IconHouseLineSvg from "./IconHouseLineSvg.svg";
+import IconLogoutSvg from "./IconLogoutSvg.svg";
 import IconOwnerRoleSvg from "./IconOwnerRoleSvg.svg";
 import IconAddMenuListingHouseSvg from "./IconAddMenuListingHouseSvg.svg";
 import IconAddMenuPropertySearchSvg from "./IconAddMenuPropertySearchSvg.svg";
@@ -77,9 +81,13 @@ export {
   IconBookingHallSvg,
   IconBookingSwimmingPoolSvg,
   IconBriefcaseSvg,
+  IconBellSvg,
+  IconChevronDownSvg,
   IconChevronRightSvg,
+  IconProperty973PinSvg,
   IconHomeSearchSvg,
   IconHouseLineSvg,
+  IconLogoutSvg,
   IconOwnerRoleSvg,
   IconAddMenuListingHouseSvg,
   IconAddMenuPropertySearchSvg,

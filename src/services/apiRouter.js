@@ -11,4 +11,7 @@ export const API_ROUTER = {
     // RESEND_EMAIL: "/api/auth/resend-email",
     // RESEND_PASSWORD: "/api/auth/resend-password",
     // RESEND_EMAIL: "/api/auth/resend-email",
+
+    // Dashboard
+    GET_USER_PROFILE: "/auth/me",
 };

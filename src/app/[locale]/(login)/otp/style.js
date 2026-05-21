@@ -57,7 +57,9 @@ export const BackLinkRow = styled.p`
   color: #cfbec3;
 `;
 
-export const BackLinkButton = styled.button`
+export const BackLinkButton = styled.button.attrs({
+  suppressHydrationWarning: true,
+})`
   border: 0;
   background: none;
   padding: 0;

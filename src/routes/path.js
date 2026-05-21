@@ -6,4 +6,6 @@ export const PATH_AUTH = {
     login: "/login",
     register: "/register",
     otp: "/otp",
+    forgotPassword: "/forgot-password",
+    myProfile: "/my-profile",
 };

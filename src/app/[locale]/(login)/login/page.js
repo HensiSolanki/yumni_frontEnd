@@ -152,12 +152,16 @@ const LoginPage = () => {
 
     if (isLogin) {
       try {
-        await dispatch(
+        const response = await dispatch(
           loginAction({
             password: data.password,
             mobileNumber: data.mobileNumber,
           })
-        );
+        ).unwrap();
+
+        if (response?.success === true) {
+          router.push(PATH_AUTH.myProfile);
+        }
       } catch (error) {
         console.error(error);
       }

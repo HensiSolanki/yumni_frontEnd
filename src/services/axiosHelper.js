@@ -1,11 +1,17 @@
 import { PATH_AUTH } from "@/routes/path";
+import { clearAuthSessionCookie } from "@/utils/authCookie";
 import axiosInstance from "@/utils/axios";
 import { getData } from "@/utils/storage";
 import { toast } from "react-toastify";
 
+const clearSession = () => {
+  localStorage.clear();
+  clearAuthSessionCookie();
+};
+
 const banAccount = (error) => {
   if (error?.isLoggedOut) {
-    localStorage.clear();
+    clearSession();
     window.location.href = PATH_AUTH.login;
     toast.error("Your account is banned. Contact support for more info.");
   }
@@ -39,7 +45,7 @@ export const axiosPost = async (
       if (e.response?.status === 401) {
         if (e.response?.data?.isLoggedOut) {
           if (user) {
-            localStorage.clear();
+            clearSession();
             window.location.href = PATH_AUTH.login;
           }
         }
@@ -81,7 +87,7 @@ export const axiosGet = async (
       if (e.response?.status === 401) {
         if (e.response?.data?.isLoggedOut) {
           if (user) {
-            localStorage.clear();
+            clearSession();
             window.location.href = PATH_AUTH.login;
           }
         }

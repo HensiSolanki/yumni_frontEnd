@@ -137,7 +137,9 @@ export const ModeToggleRow = styled.p`
   color: #cfbec3;
 `;
 
-export const ModeToggleButton = styled.button`
+export const ModeToggleButton = styled.button.attrs({
+  suppressHydrationWarning: true,
+})`
   border: 0;
   background: none;
   padding: 0;
@@ -175,7 +177,9 @@ export const SocialRow = styled.div`
   margin-bottom: 14px;
 `;
 
-export const SocialButton = styled.button`
+export const SocialButton = styled.button.attrs({
+  suppressHydrationWarning: true,
+})`
   flex: 1;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.2);
