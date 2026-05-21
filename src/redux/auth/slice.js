@@ -6,6 +6,7 @@ const initialState = {
     otp: null,
     isLoading: false,
     error: null,
+    token: null,
 }
 
 const authSlice = createSlice({
@@ -24,6 +25,9 @@ const authSlice = createSlice({
         setError: (state, { payload }) => {
             state.error = payload;
         },
+        setToken: (state, { payload }) => {
+            state.token = payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -35,6 +39,7 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.error = null;
                 state.otp = payload?.otp ?? payload?.data?.otp ?? null;
+                state.token = payload?.data?.accessToken ?? payload?.data?.accessToken ?? null;
             })
             .addCase(registerAction.rejected, (state, { payload }) => {
                 state.isLoading = false;
@@ -49,6 +54,7 @@ const authSlice = createSlice({
                 state.error = null;
                 state.user = payload;
                 state.otp = payload?.otp ?? payload?.data?.otp ?? null;
+                state.token = payload?.data?.accessToken ?? payload?.data?.accessToken ?? null;
             })
             .addCase(loginAction.rejected, (state, { payload }) => {
                 state.isLoading = false;
@@ -62,6 +68,7 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.error = null;
                 state.user = payload;
+                state.token = payload?.data?.accessToken ?? payload?.data?.accessToken ?? null;
             })
             .addCase(verifyOtpAction.rejected, (state, { payload }) => {
                 state.isLoading = false;
@@ -76,5 +83,6 @@ export const {
     setUser,
     setIsLoading,
     setError,
-    setOtp
+    setOtp,
+    setToken
 } = authSlice.actions;

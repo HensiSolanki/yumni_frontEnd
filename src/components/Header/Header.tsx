@@ -30,12 +30,12 @@ type RightItem = {
 
 const MAIN_TABS = [
   { index: 0, labelKey: "realEstate" as const, Icon: IconBuildingSvg },
-  { index: 1, labelKey: "projects" as const, Icon: IconChartSvg },
-  { index: 2, labelKey: "dailyRent" as const, Icon: IconCalendarSvg },
+  // { index: 1, labelKey: "projects" as const, Icon: IconChartSvg },
+  // { index: 2, labelKey: "dailyRent" as const, Icon: IconCalendarSvg }, 
 ] as const;
 
 const RIGHT: RightItem[] = [
-  { key: "map", path: "/map", labelKey: "mapSearch", Icon: IconMapFoldedSvg },
+  // { key: "map", path: "/map", labelKey: "mapSearch", Icon: IconMapFoldedSvg },
   { key: "add", openAddPopup: true, labelKey: "addListing" },
   { key: "login", path: "/login", Icon: IconUserFramedSvg, framedIcon: true },
 ];

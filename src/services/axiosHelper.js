@@ -67,16 +67,18 @@ export const axiosPost = async (
 export const axiosGet = async (
   url,
   params = {},
-  contentType = "application/json"
+  contentType = "application/json",
+  token
 ) => {
   let response = {};
   const user = getData("user");
+  const authToken = token ?? user?.token ?? user?.accessToken;
 
   try {
     const result = await axiosInstance.get(url, {
       headers: {
         "Content-Type": contentType,
-        Authorization: user?.token ? `Bearer ${user.token}` : null,
+        Authorization: authToken ? `Bearer ${authToken}` : null,
       },
       params,
     });

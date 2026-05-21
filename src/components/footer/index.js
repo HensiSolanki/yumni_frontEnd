@@ -68,11 +68,11 @@ const Footer = () => {
                             </LogoMark>
                             <LogoSub>{t("logoSub")}</LogoSub>
                             <Tagline>{t("tagline")}</Tagline>
-                            <AppRow>
+                            {/* <AppRow>
                                 <AppPill>{t("googlePlay")}</AppPill>
                                 <AppPill>{t("appStore")}</AppPill>
                                 <AppPill>{t("appGallery")}</AppPill>
-                            </AppRow>
+                            </AppRow> */}
                         </div>
                         <CtaBox>
                             <CtaText>{t("ctaTitle")}</CtaText>
@@ -81,7 +81,7 @@ const Footer = () => {
                         </CtaBox>
                     </TopBand>
 
-                    <LinksBand>
+                    {/* <LinksBand>
                         <div>
                             <ColTitle>{t("colSearch")}</ColTitle>
                             <ColLink href="#">{t("searchApartmentsRent")}</ColLink>
@@ -130,7 +130,7 @@ const Footer = () => {
                                 </ColLink>
                             </CompanyLinkGrid>
                         </div>
-                    </LinksBand>
+                    </LinksBand> */}
 
                     <Bottom>
                         <Copy>

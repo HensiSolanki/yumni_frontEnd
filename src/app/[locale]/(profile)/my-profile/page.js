@@ -74,6 +74,10 @@ import {
   TwoCol,
   VerifiedBadge,
 } from "./style";
+import { getUserProfileAction } from "../../../../redux/dashboard/action";
+import { useDispatch, useSelector } from "react-redux";
+import { useCallback, useEffect } from "react";
+import { setUserData } from "../../../../redux/dashboard/slice";
 
 const DEMO_PROPERTIES = [
   {
@@ -173,7 +177,9 @@ const getFirstName = (name) => {
 
 const MyProfilePage = () => {
   const user = useStoredUser();
-
+  const dispatch = useDispatch();
+  const Token = useSelector((state) => state.authSlice?.token);
+  const UserData = useSelector((state) => state.dashboardSlice?.userProfileData);
   const displayName = user?.fullName || "Property owner";
   const firstName = getFirstName(user?.fullName);
   const initials = getInitials(user?.fullName);
@@ -195,9 +201,26 @@ const MyProfilePage = () => {
     { label: "Member since", value: "—", Icon: IconCalendarSvg },
   ];
 
-  const GetUserProfile = async () => {
+  const GetUserProfile = useCallback(async () => {
+    const token = Token;
+    if (!token) return;
 
-  }
+    try {
+      const response = await dispatch(getUserProfileAction({ token }));
+      if (response.payload?.success === true) {
+        dispatch(setUserData(response.payload.data?.user));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [dispatch, Token]);
+
+  useEffect(() => {
+    GetUserProfile();
+  }, []);
+
+  console.log("UserData", UserData);
+
 
   return (
     <>
@@ -209,7 +232,7 @@ const MyProfilePage = () => {
             <Sidebar>
               <SidebarItem type="button" $active>
                 <IconUserFramedSvg aria-hidden />
-                My profile
+                My {UserData?.fullName}
               </SidebarItem>
               <SidebarItem type="button">
                 <IconBuildingSvg aria-hidden />
@@ -241,7 +264,7 @@ const MyProfilePage = () => {
                 <div>
                   <PageTitle>My profile</PageTitle>
                   <PageSub>
-                    Welcome back, {firstName} — here&apos;s your owner dashboard
+                    Welcome back, {UserData?.fullName} — here&apos;s your owner dashboard
                   </PageSub>
                 </div>
                 <HeaderBtns>
@@ -254,7 +277,7 @@ const MyProfilePage = () => {
                 <BannerTop>
                   <AvatarLg>{initials}</AvatarLg>
                   <div>
-                    <OwnerName>{displayName}</OwnerName>
+                    <OwnerName>{UserData?.fullName}</OwnerName>
                     <OwnerMeta>
                       <span>
                         <IconMapFoldedSvg

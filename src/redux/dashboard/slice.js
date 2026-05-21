@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { getUserProfileAction } from "./action";
 
 const initialState = {
-    userData: null,
+    userProfileData: null,
     isLoading: false,
     error: null,
 }
@@ -12,7 +12,8 @@ const dashboardSlice = createSlice({
     initialState,
     reducers: {
         setUserData: (state, { payload }) => {
-            state.userData = payload;
+            console.log("payload", payload);
+            state.userProfileData = payload;
         },
         setIsLoading: (state, { payload }) => {
             state.isLoading = payload;
