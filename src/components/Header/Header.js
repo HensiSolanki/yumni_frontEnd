@@ -1,14 +1,11 @@
 "use client";
 
-import type { FC } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
   IconBuildingSvg,
-  IconCalendarSvg,
-  IconChartSvg,
   IconMapFoldedSvg,
   IconUserFramedSvg,
 } from "@/assets";
@@ -17,24 +14,13 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useRouter } from "@/i18n/navigation";
 import { setAddButtonPopUp, setHeaderTabOptions } from "@/redux/header/slice";
 
-type TabIcon = FC<{ className?: string }>;
-
-type RightItem = {
-  key: string;
-  path?: "/map" | "/login";
-  openAddPopup?: boolean;
-  labelKey?: "mapSearch" | "addListing";
-  Icon?: TabIcon;
-  framedIcon?: boolean;
-};
-
 const MAIN_TABS = [
-  { index: 0, labelKey: "realEstate" as const, Icon: IconBuildingSvg },
-  // { index: 1, labelKey: "projects" as const, Icon: IconChartSvg },
-  // { index: 2, labelKey: "dailyRent" as const, Icon: IconCalendarSvg }, 
-] as const;
+  { index: 0, labelKey: "realEstate", Icon: IconBuildingSvg },
+  // { index: 1, labelKey: "projects", Icon: IconChartSvg },
+  // { index: 2, labelKey: "dailyRent", Icon: IconCalendarSvg },
+];
 
-const RIGHT: RightItem[] = [
+const RIGHT = [
   // { key: "map", path: "/map", labelKey: "mapSearch", Icon: IconMapFoldedSvg },
   { key: "add", openAddPopup: true, labelKey: "addListing" },
   { key: "login", path: "/login", Icon: IconUserFramedSvg, framedIcon: true },
@@ -45,8 +31,7 @@ export default function Header() {
   const router = useRouter();
   const t = useTranslations("Header");
   const activeTab = useSelector(
-    (state: { headerApiSlice: { headerTabOptions: number } }) =>
-      state.headerApiSlice.headerTabOptions,
+    (state) => state.headerApiSlice.headerTabOptions,
   );
   const fontUi =
     "font-[family-name:var(--font-inter),ui-sans-serif,system-ui,sans-serif]";

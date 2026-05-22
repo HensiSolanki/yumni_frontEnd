@@ -41,14 +41,14 @@ const AUTH_COPY = {
   login: {
     title: "Log in or create account",
     subtitle: "Welcome back - sign in to continue",
-    submitLabel: "Send OTP",
+    submitLabel: "Log in",
     togglePrompt: "Don't have an account?",
     toggleAction: "Create account",
   },
   register: {
     title: "Create your account",
     subtitle: "Join Property 973 - sign up to get started",
-    submitLabel: "Create account",
+    submitLabel: "Send OTP",
     togglePrompt: "Already have an account?",
     toggleAction: "Log in",
   },
