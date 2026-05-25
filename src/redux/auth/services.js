@@ -12,3 +12,15 @@ export const loginUser = (data) => {
 export const verifyOtp = (data) => {
   return axiosPost(API_ROUTER.VERIFY_OTP, data);
 };
+
+export const forgotPassword = (data) => {
+  return axiosPost(API_ROUTER.FORGOT_PASSWORD, data);
+};
+
+export const verifyForgotPasswordOtp = (data) => {
+  return axiosPost(API_ROUTER.FORGOT_PASSWORD_VERIFY_OTP, data);
+};
+
+export const resetPassword = (data) => {
+  return axiosPost(API_ROUTER.RESET_PASSWORD, data);
+};

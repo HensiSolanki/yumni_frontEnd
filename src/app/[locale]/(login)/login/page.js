@@ -2,11 +2,12 @@
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import LoginCityBackdropSvg from "@/assets/LoginCityBackdropSvg.svg";
+import { IconEyeClosedSvg, IconEyeOpenSvg } from "@/assets";
 import { FormProvider } from "@/components/hook-form";
+import OtpSuccessAlert from "@/components/auth/OtpSuccessAlert";
 import { loginSchema, registerSchema } from "@/schemas/authSchema";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
-import Swal from "sweetalert2";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/footer/index";
 import { useRouter } from "@/i18n/navigation";
@@ -19,12 +20,16 @@ import {
   CityBackdrop,
   DividerRow,
   ErrorText,
+  ForgotPasswordButton,
+  ForgotPasswordRow,
   Input,
   Label,
   LoginCard,
   LoginShell,
   ModeToggleButton,
   ModeToggleRow,
+  PasswordFieldWrapper,
+  PasswordToggleButton,
   PrimaryButton,
   StatBox,
   StatLabel,
@@ -54,16 +59,27 @@ const AUTH_COPY = {
   },
 };
 
-const AuthFormFields = ({ register, errors }) => (
+const AuthFormFields = ({
+  register,
+  errors,
+  isLogin,
+  onForgotPassword,
+  showPassword,
+  onTogglePassword,
+}) => (
   <>
-    <Label htmlFor="fullName">Full name</Label>
-    <Input
-      id="fullName"
-      placeholder="Enter your full name"
-      {...register("fullName")}
-      aria-invalid={Boolean(errors.fullName)}
-    />
-    {errors.fullName && <ErrorText>{errors.fullName.message}</ErrorText>}
+    {!isLogin && (
+      <>
+        <Label htmlFor="fullName">Full name</Label>
+        <Input
+          id="fullName"
+          placeholder="Enter your full name"
+          {...register("fullName")}
+          aria-invalid={Boolean(errors.fullName)}
+        />
+        {errors.fullName && <ErrorText>{errors.fullName.message}</ErrorText>}
+      </>
+    )}
 
     <Label htmlFor="mobileNumber">Mobile number</Label>
     <Input
@@ -75,44 +91,40 @@ const AuthFormFields = ({ register, errors }) => (
     {errors.mobileNumber && <ErrorText>{errors.mobileNumber.message}</ErrorText>}
 
     <Label htmlFor="password">Password</Label>
-    <Input
-      id="password"
-      type="password"
-      placeholder="••••••••"
-      {...register("password")}
-      aria-invalid={Boolean(errors.password)}
-    />
+    <PasswordFieldWrapper>
+      <Input
+        id="password"
+        type={showPassword ? "text" : "password"}
+        placeholder="••••••••"
+        {...register("password")}
+        aria-invalid={Boolean(errors.password)}
+      />
+      <PasswordToggleButton
+        onClick={onTogglePassword}
+        aria-label={showPassword ? "Hide password" : "Show password"}
+        aria-pressed={showPassword}
+      >
+        {showPassword ? <IconEyeClosedSvg /> : <IconEyeOpenSvg />}
+      </PasswordToggleButton>
+    </PasswordFieldWrapper>
     {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
+
+    {isLogin && (
+      <ForgotPasswordRow>
+        <ForgotPasswordButton type="button" onClick={onForgotPassword}>
+          Forgot password?
+        </ForgotPasswordButton>
+      </ForgotPasswordRow>
+    )}
   </>
 );
 
 const PENDING_MOBILE_KEY = "authPendingMobile";
 
-const OtpSuccessAlert = ({ otp, onConfirm }) => {
-  const hasShownRef = useRef(false);
-
-  useEffect(() => {
-    if (otp == null || hasShownRef.current) return;
-
-    hasShownRef.current = true;
-
-    Swal.fire({
-      title: "OTP sent",
-      text: `Your OTP is: ${otp}, save this otp it will be used to verify your account`,
-      icon: "success",
-      confirmButtonText: "OK",
-      confirmButtonColor: "var(--color-brand)",
-    }).then(() => {
-      onConfirm();
-    });
-  }, [otp, onConfirm]);
-
-  return null;
-};
-
 const LoginPage = () => {
   const AuthSelector = useSelector((state) => state.authSlice);
   const [mode, setMode] = useState("login");
+  const [showPassword, setShowPassword] = useState(false);
 
   const isLogin = mode === "login";
   const copy = AUTH_COPY[mode];
@@ -135,6 +147,7 @@ const LoginPage = () => {
 
   const switchMode = (nextMode) => {
     setMode(nextMode);
+    setShowPassword(false);
     reset({
       fullName: "",
       mobileNumber: "",
@@ -142,10 +155,18 @@ const LoginPage = () => {
     });
   };
 
+  const handleTogglePassword = useCallback(() => {
+    setShowPassword((prev) => !prev);
+  }, []);
+
   const handleOtpAlertConfirm = useCallback(() => {
     dispatch(setOtp(null));
     router.push(PATH_AUTH.otp);
   }, [dispatch, router]);
+
+  const handleForgotPassword = useCallback(() => {
+    router.push(PATH_AUTH.forgotPassword);
+  }, [router]);
 
   const onSubmit = async (data) => {
     sessionStorage.setItem(PENDING_MOBILE_KEY, data.mobileNumber);
@@ -204,7 +225,14 @@ const LoginPage = () => {
           <Subtitle>{copy.subtitle}</Subtitle>
 
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <AuthFormFields register={register} errors={errors} />
+            <AuthFormFields
+              register={register}
+              errors={errors}
+              isLogin={isLogin}
+              onForgotPassword={handleForgotPassword}
+              showPassword={showPassword}
+              onTogglePassword={handleTogglePassword}
+            />
             <PrimaryButton type="submit">{copy.submitLabel}</PrimaryButton>
           </FormProvider>
 

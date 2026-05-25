@@ -115,6 +115,70 @@ export const ErrorText = styled.p`
   font-size: 11px;
 `;
 
+export const PasswordFieldWrapper = styled.div`
+  position: relative;
+  margin-bottom: 10px;
+
+  input {
+    margin-bottom: 0;
+    padding-right: 38px;
+  }
+`;
+
+export const PasswordToggleButton = styled.button.attrs({
+  suppressHydrationWarning: true,
+  type: "button",
+})`
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  color: #cfbec3;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    color: #fff;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
+`;
+
+export const ForgotPasswordRow = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin: -4px 0 12px;
+`;
+
+export const ForgotPasswordButton = styled.button.attrs({
+  suppressHydrationWarning: true,
+})`
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--color-brand);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+`;
+
 export const PrimaryButton = styled.button.attrs({
   suppressHydrationWarning: true,
 })`

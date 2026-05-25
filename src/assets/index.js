@@ -9,6 +9,8 @@ import IconCarPropertySvg from "./IconCarPropertySvg.svg";
 import IconChartSvg from "./IconChartSvg.svg";
 import IconCheckSmallSvg from "./IconCheckSmallSvg.svg";
 import IconCrosshairSvg from "./IconCrosshairSvg.svg";
+import IconEyeOpenSvg from "./IconEyeOpenSvg.svg";
+import IconEyeClosedSvg from "./IconEyeClosedSvg.svg";
 import IconHeartOutlineSvg from "./IconHeartOutlineSvg.svg";
 import IconMapFoldedSvg from "./IconMapFoldedSvg.svg";
 import IconMoreHorizontalSvg from "./IconMoreHorizontalSvg.svg";
@@ -57,6 +59,8 @@ export {
   IconChartSvg,
   IconCheckSmallSvg,
   IconCrosshairSvg,
+  IconEyeOpenSvg,
+  IconEyeClosedSvg,
   IconHeartOutlineSvg,
   IconMapFoldedSvg,
   IconMoreHorizontalSvg,

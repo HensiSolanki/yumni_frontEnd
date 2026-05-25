@@ -3,9 +3,14 @@ import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { setAuthSessionCookie } from "@/utils/authCookie";
 import { getData, saveData } from "@/utils/storage";
-import { loginUser, registerUser, verifyOtp } from "./services";
-
-
+import {
+  forgotPassword,
+  loginUser,
+  registerUser,
+  resetPassword,
+  verifyForgotPasswordOtp,
+  verifyOtp,
+} from "./services";
 
 const getApiErrorMessage = (result, fallback = "Something went wrong") =>
   result?.message || result?.data?.message || fallback;
@@ -47,7 +52,7 @@ export const registerAction = createAsyncThunk(
         setAuthSessionCookie();
       }
       toast.success(
-        getApiSuccessMessage(result, "Account created successfully")
+        getApiSuccessMessage(result, "Account created successfully"),
       );
       return result.data;
     } catch (err) {
@@ -59,7 +64,7 @@ export const registerAction = createAsyncThunk(
       }
       return rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const loginAction = createAsyncThunk(
@@ -88,7 +93,7 @@ export const loginAction = createAsyncThunk(
       }
       return rejectWithValue(message);
     }
-  }
+  },
 );
 
 export const verifyOtpAction = createAsyncThunk(
@@ -127,5 +132,82 @@ export const verifyOtpAction = createAsyncThunk(
       }
       return rejectWithValue(message);
     }
-  }
+  },
+);
+
+export const verifyForgotOtpAction = createAsyncThunk(
+  "authSlice/verifyForgotOtpAction",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const result = await verifyForgotPasswordOtp(payload);
+      const data = result?.data;
+
+      if (isApiFailure(result) || data?.success === false) {
+        const message = getApiErrorMessage(result, "Invalid OTP");
+        toast.error(message);
+        return rejectWithValue(message);
+      }
+
+      toast.success(getApiSuccessMessage(result, "OTP verified successfully"));
+      return data;
+    } catch (err) {
+      const message =
+        err?.response?.data?.message || err.message || "Something went wrong";
+      toast.error(message);
+      if (err instanceof AxiosError) {
+        return rejectWithValue(err?.response?.data?.message ?? message);
+      }
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export const forgotPasswordAction = createAsyncThunk(
+  "authSlice/forgotPasswordAction",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const result = await forgotPassword(payload);
+      const data = result?.data;
+      if (isApiFailure(result)) {
+        const message = getApiErrorMessage(result);
+        toast.error(message);
+        return rejectWithValue(message);
+      }
+      return data;
+    } catch (err) {
+      console.log("err", err);
+      const message =
+        err?.response?.data?.message || err.message || "Something went wrong";
+      console.log("message", message);
+      toast.error(message);
+      if (err instanceof AxiosError) {
+        return rejectWithValue(err?.response?.data?.message ?? message);
+      }
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export const resetPasswordAction = createAsyncThunk(
+  "authSlice/resetPasswordAction",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const result = await resetPassword(payload);
+      const data = result?.data;
+      if (isApiFailure(result)) {
+        const message = getApiErrorMessage(result);
+        toast.error(message);
+        return rejectWithValue(message);
+      }
+      return data;
+    } catch (err) {
+      const message =
+        err?.response?.data?.message || err.message || "Something went wrong";
+      toast.error(message);
+      if (err instanceof AxiosError) {
+        return rejectWithValue(err?.response?.data?.message ?? message);
+      }
+      return rejectWithValue(message);
+    }
+  },
 );
