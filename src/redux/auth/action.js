@@ -168,11 +168,12 @@ export const forgotPasswordAction = createAsyncThunk(
     try {
       const result = await forgotPassword(payload);
       const data = result?.data;
-      if (isApiFailure(result)) {
-        const message = getApiErrorMessage(result);
+      if (isApiFailure(result) || data?.success !== true) {
+        const message = getApiErrorMessage(result, "Failed to send OTP");
         toast.error(message);
         return rejectWithValue(message);
       }
+      toast.success(getApiSuccessMessage(result, "OTP sent to your mobile."));
       return data;
     } catch (err) {
       console.log("err", err);

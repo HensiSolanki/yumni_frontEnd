@@ -4,11 +4,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
 
 import LoginCityBackdropSvg from "@/assets/LoginCityBackdropSvg.svg";
 import OtpForm from "@/components/auth/OtpForm";
-import { showOtpSuccessAlert } from "@/components/auth/OtpSuccessAlert";
 import Footer from "@/components/footer/index";
 import Header from "@/components/Header/Header";
 import { FormProvider } from "@/components/hook-form";
@@ -48,6 +46,7 @@ const ForgotPassword = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedMobile, setSubmittedMobile] = useState("");
+  const [mobileMasked, setMobileMasked] = useState("");
   const [showOtpInput, setShowOtpInput] = useState(false);
 
   const methods = useForm({
@@ -71,17 +70,8 @@ const ForgotPassword = () => {
         forgotPasswordAction({ mobileNumber }),
       ).unwrap();
 
-      const otp = response?.otp ?? response?.data?.otp ?? null;
-
-      if (otp == null) {
-        toast.error("OTP not received. Please try again.");
-        return;
-      }
-
-      setSubmittedMobile(mobileNumber);
-
-      await showOtpSuccessAlert(otp);
-
+      setSubmittedMobile(response?.data?.mobileNumber ?? mobileNumber);
+      setMobileMasked(response?.data?.mobileMasked ?? "");
       setShowOtpInput(true);
     } catch (error) {
       console.error("Forgot password error:", error);
@@ -109,22 +99,18 @@ const ForgotPassword = () => {
           </BrandRow>
 
           <Title>Forgot password?</Title>
-          <Subtitle>Enter your mobile number to receive an OTP</Subtitle>
+          <Subtitle>
+            {showOtpInput
+              ? `Enter the 6-digit code sent to ${mobileMasked || submittedMobile}`
+              : "Enter your mobile number to receive an OTP"}
+          </Subtitle>
 
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Label htmlFor="mobileNumber">Mobile number</Label>
             <Input
               id="mobileNumber"
-              type="tel"
-              inputMode="numeric"
-              maxLength={10}
-              placeholder="Enter 10-digit mobile number"
+              placeholder="+973  Mobile number"
               {...register("mobileNumber")}
-              onInput={(event) => {
-                event.target.value = event.target.value
-                  .replace(/\D/g, "")
-                  .slice(0, 10);
-              }}
               aria-invalid={Boolean(errors.mobileNumber)}
               disabled={showOtpInput}
             />

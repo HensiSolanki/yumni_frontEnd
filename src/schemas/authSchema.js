@@ -1,6 +1,9 @@
 import * as yup from "yup";
-
-const mobileRegex = /^(\+966\s?)?\d{10}$/;
+import {
+  isValidPhoneNumber,
+  normalizeMobileNumber,
+  PHONE_VALIDATION_MESSAGE,
+} from "@/constants/phoneCountries";
 
 const fullNameField = yup
   .string()
@@ -8,11 +11,20 @@ const fullNameField = yup
   .required("Full name is required")
   .min(2, "Full name must be at least 2 characters");
 
+const emailField = yup
+  .string()
+  .trim()
+  .required("Email is required")
+  .email("Enter a valid email address");
+
 const mobileNumberField = yup
   .string()
   .trim()
+  .transform(normalizeMobileNumber)
   .required("Mobile number is required")
-  .matches(mobileRegex, "Enter a valid mobile number");
+  .test("valid-phone", PHONE_VALIDATION_MESSAGE, (value) =>
+    !value || isValidPhoneNumber(value),
+  );
 
 const passwordField = yup
   .string()
@@ -26,6 +38,7 @@ export const loginSchema = yup.object({
 
 export const registerSchema = yup.object({
   fullName: fullNameField,
+  email: emailField,
   mobileNumber: mobileNumberField,
   password: passwordField,
 });
@@ -45,11 +58,7 @@ export const otpSchema = yup.object({
 });
 
 export const forgotPasswordSchema = yup.object({
-  mobileNumber: yup
-    .string()
-    .trim()
-    .required("Mobile number is required")
-    .matches(/^\d{10}$/, "Enter a valid 10-digit mobile number"),
+  mobileNumber: mobileNumberField,
 });
 
 export const resetPasswordSchema = yup.object({

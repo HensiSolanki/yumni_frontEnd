@@ -4,7 +4,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import LoginCityBackdropSvg from "@/assets/LoginCityBackdropSvg.svg";
 import { IconEyeClosedSvg, IconEyeOpenSvg } from "@/assets";
 import { FormProvider } from "@/components/hook-form";
-import OtpSuccessAlert from "@/components/auth/OtpSuccessAlert";
 import { loginSchema, registerSchema } from "@/schemas/authSchema";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -39,8 +38,7 @@ import {
   Title,
 } from "./style";
 import { loginAction, registerAction } from "@/redux/auth/action";
-import { setOtp } from "@/redux/auth/slice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const AUTH_COPY = {
   login: {
@@ -78,13 +76,24 @@ const AuthFormFields = ({
           aria-invalid={Boolean(errors.fullName)}
         />
         {errors.fullName && <ErrorText>{errors.fullName.message}</ErrorText>}
+
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          autoComplete="email"
+          placeholder="Enter your email address"
+          {...register("email")}
+          aria-invalid={Boolean(errors.email)}
+        />
+        {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
       </>
     )}
 
     <Label htmlFor="mobileNumber">Mobile number</Label>
     <Input
       id="mobileNumber"
-      placeholder="+966  Mobile number"
+      placeholder="+973  Mobile number"
       {...register("mobileNumber")}
       aria-invalid={Boolean(errors.mobileNumber)}
     />
@@ -122,7 +131,6 @@ const AuthFormFields = ({
 const PENDING_MOBILE_KEY = "authPendingMobile";
 
 const LoginPage = () => {
-  const AuthSelector = useSelector((state) => state.authSlice);
   const [mode, setMode] = useState("login");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -134,6 +142,7 @@ const LoginPage = () => {
     resolver: yupResolver(isLogin ? loginSchema : registerSchema),
     defaultValues: {
       fullName: "",
+      email: "",
       mobileNumber: "",
       password: "",
     },
@@ -150,6 +159,7 @@ const LoginPage = () => {
     setShowPassword(false);
     reset({
       fullName: "",
+      email: "",
       mobileNumber: "",
       password: "",
     });
@@ -159,11 +169,6 @@ const LoginPage = () => {
     setShowPassword((prev) => !prev);
   }, []);
 
-  const handleOtpAlertConfirm = useCallback(() => {
-    dispatch(setOtp(null));
-    router.push(PATH_AUTH.otp);
-  }, [dispatch, router]);
-
   const handleForgotPassword = useCallback(() => {
     router.push(PATH_AUTH.forgotPassword);
   }, [router]);
@@ -171,35 +176,28 @@ const LoginPage = () => {
   const onSubmit = async (data) => {
     sessionStorage.setItem(PENDING_MOBILE_KEY, data.mobileNumber);
 
-    if (isLogin) {
-      try {
-        const response = await dispatch(
+    try {
+      if (isLogin) {
+        await dispatch(
           loginAction({
             password: data.password,
             mobileNumber: data.mobileNumber,
-          })
+          }),
         ).unwrap();
-
-        if (response?.success === true) {
-          router.push(PATH_AUTH.myProfile);
-        }
-      } catch (error) {
-        console.error(error);
+      } else {
+        await dispatch(
+          registerAction({
+            password: data.password,
+            fullName: data.fullName,
+            email: data.email,
+            mobileNumber: data.mobileNumber,
+          }),
+        ).unwrap();
       }
-      return;
-    }
 
-    try {
-      const response = await dispatch(
-        registerAction({
-          password: data.password,
-          fullName: data.fullName,
-          mobileNumber: data.mobileNumber,
-        })
-      ).unwrap();
-      console.log("Register success:", response);
+      router.push(PATH_AUTH.otp);
     } catch (error) {
-      console.error("Register error:", error);
+      console.error(error);
     }
   };
 
@@ -264,10 +262,6 @@ const LoginPage = () => {
           </StatsRow>
         </LoginCard>
       </LoginShell>
-
-      {AuthSelector?.otp != null && (
-        <OtpSuccessAlert otp={AuthSelector.otp} onConfirm={handleOtpAlertConfirm} />
-      )}
 
       <Footer />
     </>
