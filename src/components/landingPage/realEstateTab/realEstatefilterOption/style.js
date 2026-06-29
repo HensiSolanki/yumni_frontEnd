@@ -69,51 +69,6 @@ export const FilterWrapper = styled.div`
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 `;
 
-/** Matches Projects tab `FiltersButton`. */
-export const FilterActionButton = styled.button`
-  font-family: inherit;
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  border: 1px solid var(--color-brand);
-  border-radius: 6px;
-  background: #ffffff;
-  color: var(--color-brand);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1;
-  padding: 10px 14px;
-  min-height: 40px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease;
-
-  &:hover {
-    background: var(--color-brand-soft);
-    border-color: var(--color-brand);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-brand);
-    outline-offset: 2px;
-  }
-`;
-
-export const FilterActionIcon = styled.span`
-  display: inline-flex;
-  width: 16px;
-  height: 16px;
-  color: currentColor;
-
-  svg {
-    display: block;
-  }
-`;
-
 export const SegmentGroup = styled.div`
   display: inline-flex;
   flex-shrink: 0;

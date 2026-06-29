@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useDispatch, useSelector } from "react-redux";
 
-import { SearchIconSvg } from "@/assets";
 import { listingOptionsFilter, propertyOptionsFilter } from "@/constants/options";
 import {
     setListingOptions,
@@ -20,8 +19,6 @@ import {
     CityPill,
     CityPillCount,
     CityPillName,
-    FilterActionButton,
-    FilterActionIcon,
     FilterInner,
     FilterSection,
     FilterToolbarScroll,
@@ -66,13 +63,6 @@ const RealEstateFilterOption = () => {
             <FilterInner>
                 <FilterToolbarScroll aria-label={t("filtersToolbarAria")}>
                     <FilterWrapper>
-                        <FilterActionButton type="button" aria-label={t("filtersAria")}>
-                            <FilterActionIcon aria-hidden="true">
-                                <SearchIconSvg />
-                            </FilterActionIcon>
-                            {t("filters")}
-                        </FilterActionButton>
-
                         <SegmentGroup>
                             {listingOptionsFilter?.map((option) => (
                                 <SegmentButton

@@ -17,10 +17,29 @@ const RealEstateTab = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { items, isLoading, error } = useSelector((state) => state.homepageSlice);
+  const { listingOptions, propertyOptions, selectedCity } = useSelector(
+    (state) => state.landingPageFilterSlice,
+  );
 
   useEffect(() => {
-    dispatch(fetchPublicListingsAction());
-  }, [dispatch]);
+    const params = {};
+
+    if (listingOptions) {
+      params.purpose = listingOptions.toLowerCase();
+    }
+
+    const propertyType =
+      typeof propertyOptions === "string" ? propertyOptions.trim() : "";
+    if (propertyType) {
+      params.propertyType = propertyType;
+    }
+
+    if (selectedCity) {
+      params.city = selectedCity;
+    }
+
+    dispatch(fetchPublicListingsAction(params));
+  }, [dispatch, listingOptions, propertyOptions, selectedCity]);
 
   const handleViewDetails = useCallback(
     (listing) => {
