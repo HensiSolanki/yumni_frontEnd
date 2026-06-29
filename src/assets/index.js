@@ -7,7 +7,17 @@ import IconBuildingSvg from "./IconBuildingSvg.svg";
 import IconCalendarSvg from "./IconCalendarSvg.svg";
 import IconCarPropertySvg from "./IconCarPropertySvg.svg";
 import IconChartSvg from "./IconChartSvg.svg";
+import IconCheckMarkSvg from "./IconCheckMarkSvg.svg";
 import IconCheckSmallSvg from "./IconCheckSmallSvg.svg";
+import IconDashboardSvg from "./IconDashboardSvg.svg";
+import IconEditSvg from "./IconEditSvg.svg";
+import IconHelpSvg from "./IconHelpSvg.svg";
+import IconMailSvg from "./IconMailSvg.svg";
+import IconMessageSvg from "./IconMessageSvg.svg";
+import IconPlusSvg from "./IconPlusSvg.svg";
+import IconSettingsSvg from "./IconSettingsSvg.svg";
+import IconStarFilledSvg from "./IconStarFilledSvg.svg";
+import IconTrashSvg from "./IconTrashSvg.svg";
 import IconCrosshairSvg from "./IconCrosshairSvg.svg";
 import IconEyeOpenSvg from "./IconEyeOpenSvg.svg";
 import IconEyeClosedSvg from "./IconEyeClosedSvg.svg";
@@ -57,7 +67,17 @@ export {
   IconCalendarSvg,
   IconCarPropertySvg,
   IconChartSvg,
+  IconCheckMarkSvg,
   IconCheckSmallSvg,
+  IconDashboardSvg,
+  IconEditSvg,
+  IconHelpSvg,
+  IconMailSvg,
+  IconMessageSvg,
+  IconPlusSvg,
+  IconSettingsSvg,
+  IconStarFilledSvg,
+  IconTrashSvg,
   IconCrosshairSvg,
   IconEyeOpenSvg,
   IconEyeClosedSvg,

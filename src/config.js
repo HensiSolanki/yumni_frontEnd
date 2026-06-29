@@ -13,8 +13,15 @@ const getEnvironment = () => {
 
 const DEFAULT_API_BASE_URL = "http://localhost:4000";
 
-const getAPIUrl = () =>
-    process.env.NEXT_PUBLIC_API_BASE_URL || DEFAULT_API_BASE_URL;
+const getAPIUrl = () => {
+    const url =
+        process.env.NEXT_PUBLIC_API_URL ??
+        process.env.NEXT_PUBLIC_API_BASE_URL ??
+        DEFAULT_API_BASE_URL;
+
+    return String(url).replace(/\/$/, "");
+};
+
 const config = {
     GET_ENVIRONMENT: getEnvironment(),
     BASE_URL: getAPIUrl(),

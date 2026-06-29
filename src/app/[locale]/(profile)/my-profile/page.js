@@ -1,22 +1,40 @@
 "use client";
 
 import {
+  IconArrowUpRightSvg,
+  IconBathPropertySvg,
+  IconBedPropertySvg,
   IconBuildingSvg,
   IconCalendarSvg,
+  IconCarPropertySvg,
   IconChartSvg,
-  IconCheckSmallSvg,
-  IconHeartOutlineSvg,
-  IconHouseLineSvg,
+  IconCheckMarkSvg,
+  IconChevronDownSvg,
+  IconDashboardSvg,
+  IconEditSvg,
+  IconHelpSvg,
+  IconMailSvg,
   IconMapFoldedSvg,
-  IconOwnerRoleSvg,
+  IconMessageSvg,
   IconPhoneSvg,
-  IconUserFramedSvg,
+  IconPlusSvg,
+  IconRulerAreaSvg,
+  IconSettingsSvg,
+  IconStarFilledSvg,
+  IconTrashSvg,
 } from "@/assets";
 import DashboardHeader from "@/components/dashboardHeader";
+import AddPropertyForm from "@/components/owner/AddPropertyForm";
+import DeletePropertyModal from "@/components/owner/DeletePropertyModal";
 import { useStoredUser } from "@/utils/useStoredUser";
+import { useIsClientMounted } from "@/utils/useIsClientMounted";
 import {
+  AccountField,
+  AccountInput,
+  AccountLabel,
   AppShell,
   AvatarLg,
+  BannerIdentity,
   BannerStat,
   BannerStatLbl,
   BannerStatNum,
@@ -30,12 +48,11 @@ import {
   CardTitle,
   ContactLine,
   HeaderBtns,
+  IconActionBtn,
   InfoGrid,
-  InfoLbl,
-  InfoRow,
-  InfoVal,
   InquiryAvatar,
   InquiryBody,
+  InquiryHeader,
   InquiryItem,
   InquiryList,
   InquiryMsg,
@@ -47,73 +64,84 @@ import {
   MetaDivider,
   OwnerMeta,
   OwnerName,
+  OwnerNameRow,
+  OwnerPropActions,
+  OwnerPropBody,
+  OwnerPropCard,
+  OwnerPropFeature,
+  OwnerPropFeatures,
+  OwnerPropFooter,
+  OwnerPropListed,
+  OwnerPropLoc,
+  OwnerPropMedia,
+  OwnerPropMediaLabel,
+  OwnerPropPhotoCount,
+  OwnerPropPrice,
+  OwnerPropPriceBlock,
+  OwnerPropStatus,
+  OwnerPropTag,
+  OwnerPropTags,
+  OwnerPropTitle,
   PageHeader,
   PageSub,
   PageTitle,
   PageWrap,
   ProfileBanner,
-  PropItem,
+  PropEmptyState,
+  PropEmptyText,
   PropList,
-  PropLoc,
-  PropName,
-  PropPrice,
-  PropStatus,
-  PropThumb,
   RatingBlock,
   RatingLabel,
+  RatingReviews,
   RatingValue,
   Sidebar,
   SidebarBadge,
+  SidebarBadgeAlert,
+  SidebarBrand,
+  SidebarBrandIcon,
+  SidebarBrandSub,
+  SidebarBrandText,
+  SidebarBrandTitle,
+  SidebarChevron,
+  SidebarFooter,
+  SidebarFooterItem,
   SidebarItem,
+  SidebarItemInner,
+  SidebarSectionLabel,
   StarsRow,
   StatCard,
   StatChg,
   StatLbl,
   StatVal,
   StatsRow,
-  TwoCol,
+  SrOnly,
   VerifiedBadge,
 } from "./style";
 import { getUserProfileAction } from "../../../../redux/dashboard/action";
+import {
+  deleteListingAction,
+  listListingsAction,
+} from "../../../../redux/listings/action";
+import { getAuthToken } from "@/utils/authToken";
+import {
+  formatListingPrice,
+  getListingCardTitle,
+  getListingFeatureItems,
+  getListingLocation,
+  getListingPurposeTag,
+  getListingStatusLabel,
+  getListingTypeTag,
+} from "@/utils/listingDisplay";
 import { useDispatch, useSelector } from "react-redux";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { setUserData } from "../../../../redux/dashboard/slice";
 
-const DEMO_PROPERTIES = [
-  {
-    id: 1,
-    name: "2BHK Apartment",
-    location: "Satellite, Ahmedabad",
-    price: "₹18,000/mo",
-    status: "Active",
-    variant: "active",
-    thumbBg: "#E1F5EE",
-    iconColor: "#0F6E56",
-    Icon: IconBuildingSvg,
-  },
-  {
-    id: 2,
-    name: "3BHK Villa",
-    location: "Prahlad Nagar, Ahmedabad",
-    price: "₹35,000/mo",
-    status: "Rented",
-    variant: "rented",
-    thumbBg: "#E6F1FB",
-    iconColor: "#185FA5",
-    Icon: IconHouseLineSvg,
-  },
-  {
-    id: 3,
-    name: "Commercial shop",
-    location: "CG Road, Ahmedabad",
-    price: "₹22,000/mo",
-    status: "Under review",
-    variant: "pending",
-    thumbBg: "#FAEEDA",
-    iconColor: "#854F0B",
-    Icon: IconBuildingSvg,
-  },
-];
+const FEATURE_ICON_MAP = {
+  ruler: IconRulerAreaSvg,
+  bed: IconBedPropertySvg,
+  bath: IconBathPropertySvg,
+  car: IconCarPropertySvg,
+};
 
 const DEMO_INQUIRIES = [
   {
@@ -146,8 +174,8 @@ const DEMO_INQUIRIES = [
     time: "Yesterday",
     tag: "New",
     tagVariant: "new",
-    bg: "#F1EFE8",
-    color: "#444441",
+    bg: "#FAEEDA",
+    color: "#633806",
   },
   {
     id: 4,
@@ -177,32 +205,27 @@ const getFirstName = (name) => {
 
 const MyProfilePage = () => {
   const user = useStoredUser();
+  const mounted = useIsClientMounted();
   const dispatch = useDispatch();
-  const Token = useSelector((state) => state.authSlice?.token);
+  const [addPropertyOpen, setAddPropertyOpen] = useState(false);
+  const [editingListing, setEditingListing] = useState(null);
+  const [listingToDelete, setListingToDelete] = useState(null);
   const UserData = useSelector((state) => state.dashboardSlice?.userProfileData);
-  const displayName = user?.fullName || "Property owner";
-  const firstName = getFirstName(user?.fullName);
-  const initials = getInitials(user?.fullName);
-  const email = user?.email || "—";
-  const phone = user?.mobileNumber || "—";
-  const role = user?.role || "Owner";
-
-  const accountFields = [
-    { label: "Full name", value: displayName, Icon: IconUserFramedSvg },
-    { label: "Email", value: email, Icon: IconOwnerRoleSvg },
-    { label: "Phone", value: phone, Icon: IconPhoneSvg },
-    { label: "Role", value: role, Icon: IconOwnerRoleSvg },
-    {
-      label: "Account status",
-      value: user ? "Active" : "—",
-      Icon: IconCheckSmallSvg,
-      highlight: user ? "#0F6E56" : undefined,
-    },
-    { label: "Member since", value: "—", Icon: IconCalendarSvg },
-  ];
+  const listings = useSelector((state) => state.listingsSlice?.items ?? []);
+  const listingsLoading = useSelector((state) => state.listingsSlice?.isLoading);
+  const listingsSubmitting = useSelector((state) => state.listingsSlice?.isSubmitting);
+  const resolvedName = user?.fullName || UserData?.fullName || "Property owner";
+  const resolvedEmail = user?.email || UserData?.email || "—";
+  const resolvedPhone = user?.mobileNumber || UserData?.mobileNumber || "";
+  const displayName = mounted ? resolvedName : "Property owner";
+  const firstName = mounted ? getFirstName(resolvedName) : "there";
+  const initials = mounted ? getInitials(resolvedName) : "PO";
+  const email = mounted ? resolvedEmail : "—";
+  const phone = mounted ? resolvedPhone || "—" : "—";
+  const showVerifiedBadge = mounted && Boolean(user);
 
   const GetUserProfile = useCallback(async () => {
-    const token = Token;
+    const token = getAuthToken();
     if (!token) return;
 
     try {
@@ -213,40 +236,113 @@ const MyProfilePage = () => {
     } catch (error) {
       console.error(error);
     }
-  }, [dispatch, Token]);
+  }, [dispatch]);
+
+  const fetchListings = useCallback(async () => {
+    if (!getAuthToken()) return;
+    await dispatch(listListingsAction({ page: 1, limit: 20 }));
+  }, [dispatch]);
 
   useEffect(() => {
     GetUserProfile();
-  }, []);
+    fetchListings();
+  }, [GetUserProfile, fetchListings]);
 
-  console.log("UserData", UserData);
+  const openAddProperty = () => {
+    setEditingListing(null);
+    setAddPropertyOpen(true);
+  };
+  const closeAddProperty = () => {
+    setAddPropertyOpen(false);
+    setEditingListing(null);
+  };
 
+  const handleEditListing = (listing) => {
+    setEditingListing(listing);
+    setAddPropertyOpen(true);
+  };
+
+  const handleDeleteListing = (listing) => {
+    if (!listing?.id) return;
+    setListingToDelete(listing);
+  };
+
+  const closeDeleteModal = () => {
+    if (listingsSubmitting) return;
+    setListingToDelete(null);
+  };
+
+  const confirmDeleteListing = async () => {
+    if (!listingToDelete?.id) return;
+    const result = await dispatch(deleteListingAction(listingToDelete.id));
+    if (deleteListingAction.fulfilled.match(result)) {
+      setListingToDelete(null);
+    }
+  };
+
+  const propertyCount = listings.length;
 
   return (
     <>
       <DashboardHeader />
+      <AddPropertyForm
+        open={addPropertyOpen}
+        onClose={closeAddProperty}
+        contactPhone={user?.mobileNumber || ""}
+        listing={editingListing}
+        onSuccess={fetchListings}
+      />
+      <DeletePropertyModal
+        open={Boolean(listingToDelete)}
+        listing={listingToDelete}
+        onClose={closeDeleteModal}
+        onConfirm={confirmDeleteListing}
+        isDeleting={listingsSubmitting}
+      />
 
       <PageWrap>
         <AppShell>
           <Layout>
             <Sidebar>
+              <SidebarBrand>
+                <SidebarBrandIcon>
+                  <IconMapFoldedSvg aria-hidden />
+                </SidebarBrandIcon>
+                <SidebarBrandText>
+                  <SidebarBrandTitle>Property 973</SidebarBrandTitle>
+                  <SidebarBrandSub>Bahrain</SidebarBrandSub>
+                </SidebarBrandText>
+                <SidebarChevron aria-hidden>
+                  <IconChevronDownSvg />
+                </SidebarChevron>
+              </SidebarBrand>
+
+              <SidebarSectionLabel>Overview</SidebarSectionLabel>
               <SidebarItem type="button" $active>
-                <IconUserFramedSvg aria-hidden />
-                My {UserData?.fullName}
+                <IconDashboardSvg aria-hidden />
+                My {firstName}
               </SidebarItem>
+
+              <SidebarSectionLabel>Listings</SidebarSectionLabel>
               <SidebarItem type="button">
-                <IconBuildingSvg aria-hidden />
-                My properties
-                <SidebarBadge>3</SidebarBadge>
+                <SidebarItemInner>
+                  <IconBuildingSvg aria-hidden />
+                  My properties
+                </SidebarItemInner>
+                <SidebarBadge>{propertyCount}</SidebarBadge>
               </SidebarItem>
-              <SidebarItem type="button">
-                <IconHouseLineSvg aria-hidden />
+              <SidebarItem type="button" onClick={openAddProperty}>
+                <IconPlusSvg aria-hidden />
                 Add property
               </SidebarItem>
+
+              <SidebarSectionLabel>Activity</SidebarSectionLabel>
               <SidebarItem type="button">
-                <IconChartSvg aria-hidden />
-                Inquiries
-                <SidebarBadge>5</SidebarBadge>
+                <SidebarItemInner>
+                  <IconMessageSvg aria-hidden />
+                  Inquiries
+                </SidebarItemInner>
+                <SidebarBadgeAlert>5</SidebarBadgeAlert>
               </SidebarItem>
               <SidebarItem type="button">
                 <IconCalendarSvg aria-hidden />
@@ -255,74 +351,91 @@ const MyProfilePage = () => {
               <SidebarItem type="button">
                 <IconChartSvg aria-hidden />
                 Analytics
-              </SidebarItem>             
-             
+              </SidebarItem>
+
+              <SidebarFooter>
+                <SidebarFooterItem type="button">
+                  <IconSettingsSvg aria-hidden />
+                  Settings
+                </SidebarFooterItem>
+                <SidebarFooterItem type="button">
+                  <IconHelpSvg aria-hidden />
+                  Help
+                </SidebarFooterItem>
+              </SidebarFooter>
             </Sidebar>
 
             <Main>
+              <SrOnly>
+                Owner dashboard with sidebar, profile summary, stats, a property card
+                styled like the public listings page with edit and delete actions, recent
+                inquiries below it, and account information.
+              </SrOnly>
+
               <PageHeader>
                 <div>
                   <PageTitle>My profile</PageTitle>
                   <PageSub>
-                    Welcome back, {UserData?.fullName} — here&apos;s your owner dashboard
+                    Welcome back, {firstName} — here&apos;s your owner dashboard
                   </PageSub>
                 </div>
                 <HeaderBtns>
                   <BtnOutline type="button">Public view</BtnOutline>
-                  <BtnPrimary type="button">Edit profile</BtnPrimary>
+                  <BtnPrimary type="button" onClick={openAddProperty}>
+                    <IconPlusSvg aria-hidden /> Add property
+                  </BtnPrimary>
+                  <BtnOutline type="button">
+                    <IconEditSvg aria-hidden /> Edit profile
+                  </BtnOutline>
                 </HeaderBtns>
               </PageHeader>
 
               <ProfileBanner>
                 <BannerTop>
-                  <AvatarLg>{initials}</AvatarLg>
-                  <div>
-                    <OwnerName>{UserData?.fullName}</OwnerName>
-                    <OwnerMeta>
-                      <span>
-                        <IconMapFoldedSvg
-                          aria-hidden
-                          style={{ width: 13, height: 13, verticalAlign: -2 }}
-                        />{" "}
-                        Location not set
-                      </span>
-                      <MetaDivider>|</MetaDivider>
-                      <span>Member since —</span>
-                      {user && (
-                        <>
-                          <MetaDivider>|</MetaDivider>
+                  <BannerIdentity>
+                    <AvatarLg>{initials}</AvatarLg>
+                    <div>
+                      <OwnerNameRow>
+                        <OwnerName>{displayName}</OwnerName>
+                        {showVerifiedBadge && (
                           <VerifiedBadge>
-                            <IconCheckSmallSvg
-                              aria-hidden
-                              style={{ width: 12, height: 12 }}
-                            />
+                            <IconCheckMarkSvg aria-hidden />
                             Verified owner
                           </VerifiedBadge>
-                        </>
-                      )}
-                    </OwnerMeta>
-                    <ContactLine>
-                      {email}
-                      {phone !== "—" && (
-                        <>
-                          {" "}
-                          &nbsp;·&nbsp; {phone}
-                        </>
-                      )}
-                    </ContactLine>
-                  </div>
+                        )}
+                      </OwnerNameRow>
+                      <OwnerMeta>
+                        <IconMapFoldedSvg aria-hidden />
+                        <span>Location not set</span>
+                        <MetaDivider>|</MetaDivider>
+                        <span>Member since —</span>
+                      </OwnerMeta>
+                      <ContactLine>
+                        <span>
+                          <IconMailSvg aria-hidden />
+                          {email}
+                        </span>
+                        {phone !== "—" && (
+                          <span>
+                            <IconPhoneSvg aria-hidden />
+                            {phone}
+                          </span>
+                        )}
+                      </ContactLine>
+                    </div>
+                  </BannerIdentity>
                   <RatingBlock>
                     <RatingLabel>Owner rating</RatingLabel>
                     <StarsRow aria-label="4.5 out of 5 stars">
-                      ★★★★☆
+                      <IconStarFilledSvg aria-hidden />
                       <RatingValue>4.5</RatingValue>
                     </StarsRow>
-                    <RatingLabel>24 reviews</RatingLabel>
+                    <RatingReviews>24 reviews</RatingReviews>
                   </RatingBlock>
                 </BannerTop>
                 <BannerStats>
                   <BannerStat>
-                    <BannerStatNum>3</BannerStatNum>
+                    <BannerStatNum>{propertyCount}</BannerStatNum>
                     <BannerStatLbl>Properties listed</BannerStatLbl>
                   </BannerStat>
                   <BannerStat>
@@ -344,7 +457,9 @@ const MyProfilePage = () => {
                 <StatCard>
                   <StatLbl>Total views</StatLbl>
                   <StatVal>142</StatVal>
-                  <StatChg>+18 this week</StatChg>
+                  <StatChg>
+                    <IconArrowUpRightSvg aria-hidden /> 18 this week
+                  </StatChg>
                 </StatCard>
                 <StatCard>
                   <StatLbl>Inquiries</StatLbl>
@@ -354,109 +469,201 @@ const MyProfilePage = () => {
                 <StatCard>
                   <StatLbl>Rent earned</StatLbl>
                   <StatVal>₹48k</StatVal>
-                  <StatChg>This month</StatChg>
+                  <StatChg $muted>This month</StatChg>
                 </StatCard>
                 <StatCard>
-                  <StatLbl>
-                    Wishlist saves
-                    <IconHeartOutlineSvg aria-hidden style={{ width: 13, height: 13 }} />
-                  </StatLbl>
+                  <StatLbl>Wishlist saves</StatLbl>
                   <StatVal>31</StatVal>
-                  <StatChg $down>-3 this week</StatChg>
+                  <StatChg $down>3 this week</StatChg>
                 </StatCard>
               </StatsRow>
 
-              <TwoCol>
-                <Card>
-                  <CardHead>
-                    <CardTitle>My properties</CardTitle>
-                    <CardAction type="button">View all</CardAction>
-                  </CardHead>
-                  <PropList>
-                    {DEMO_PROPERTIES.map(
-                      ({ id, name, location, price, status, variant, thumbBg, iconColor, Icon }) => (
-                        <PropItem key={id}>
-                          <PropThumb $bg={thumbBg}>
-                            <Icon style={{ color: iconColor }} aria-hidden />
-                          </PropThumb>
-                          <div>
-                            <PropName>{name}</PropName>
-                            <PropLoc>
-                              <IconMapFoldedSvg aria-hidden style={{ width: 12, height: 12 }} />
-                              {location}
-                            </PropLoc>
-                          </div>
-                          <div>
-                            <PropPrice>{price}</PropPrice>
-                            <PropStatus $variant={variant}>• {status}</PropStatus>
-                          </div>
-                        </PropItem>
-                      ),
-                    )}
-                  </PropList>
-                </Card>
+              <Card>
+                <CardHead>
+                  <CardTitle>My properties</CardTitle>
+                  <CardAction type="button">View all</CardAction>
+                </CardHead>
+                <PropList>
+                  {listingsLoading ? (
+                    <OwnerPropCard>
+                      <OwnerPropBody>
+                        <OwnerPropTitle>Loading properties…</OwnerPropTitle>
+                      </OwnerPropBody>
+                    </OwnerPropCard>
+                  ) : listings.length === 0 ? (
+                    <PropEmptyState>
+                      <PropEmptyText>
+                        List a property to reach more buyers
+                      </PropEmptyText>
+                      <BtnOutline type="button" onClick={openAddProperty}>
+                        <IconPlusSvg aria-hidden /> Add property
+                      </BtnOutline>
+                    </PropEmptyState>
+                  ) : (
+                    listings.map((listing) => {
+                      const coverPhoto = listing?.photos?.[0]?.url;
+                      const photoCount = listing?.photos?.length ?? 0;
+                      const features = getListingFeatureItems(listing);
 
-                <Card>
-                  <CardHead>
-                    <CardTitle>Recent inquiries</CardTitle>
-                    <CardAction type="button">View all</CardAction>
-                  </CardHead>
-                  <InquiryList>
-                    {DEMO_INQUIRIES.map(
-                      ({
-                        id,
-                        initials: inqInitials,
-                        name,
-                        message,
-                        time,
-                        tag,
-                        tagVariant,
-                        bg,
-                        color,
-                      }) => (
-                        <InquiryItem key={id}>
-                          <InquiryAvatar $bg={bg} $color={color}>
-                            {inqInitials}
-                          </InquiryAvatar>
-                          <InquiryBody>
+                      return (
+                        <OwnerPropCard key={listing.id}>
+                          <OwnerPropBody>
+                            <OwnerPropTags>
+                              <OwnerPropTag $brand>
+                                {getListingPurposeTag(listing)}
+                              </OwnerPropTag>
+                              <OwnerPropTag>{getListingTypeTag(listing)}</OwnerPropTag>
+                            </OwnerPropTags>
+                            <OwnerPropTitle>{getListingCardTitle(listing)}</OwnerPropTitle>
+                            <OwnerPropLoc>{getListingLocation(listing)}</OwnerPropLoc>
+                            {features.length > 0 && (
+                              <OwnerPropFeatures>
+                                {features.map((item) => {
+                                  const IconComponent = FEATURE_ICON_MAP[item.iconKey];
+                                  return (
+                                    <OwnerPropFeature key={item.text}>
+                                      {IconComponent ? (
+                                        <IconComponent aria-hidden />
+                                      ) : null}
+                                      {item.text}
+                                    </OwnerPropFeature>
+                                  );
+                                })}
+                              </OwnerPropFeatures>
+                            )}
+                            <OwnerPropFooter>
+                              <OwnerPropPriceBlock>
+                                <OwnerPropPrice>
+                                  {formatListingPrice(listing)}
+                                </OwnerPropPrice>
+                                <OwnerPropListed>Listed recently</OwnerPropListed>
+                              </OwnerPropPriceBlock>
+                              <OwnerPropActions>
+                                <OwnerPropStatus>
+                                  • {getListingStatusLabel(listing.status)}
+                                </OwnerPropStatus>
+                                <IconActionBtn
+                                  type="button"
+                                  aria-label="Edit property"
+                                  onClick={() => handleEditListing(listing)}
+                                >
+                                  <IconEditSvg aria-hidden />
+                                </IconActionBtn>
+                                <IconActionBtn
+                                  type="button"
+                                  $danger
+                                  aria-label="Delete property"
+                                  disabled={listingsSubmitting}
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    handleDeleteListing(listing);
+                                  }}
+                                >
+                                  <IconTrashSvg aria-hidden />
+                                </IconActionBtn>
+                              </OwnerPropActions>
+                            </OwnerPropFooter>
+                          </OwnerPropBody>
+                          <OwnerPropMedia $photo={coverPhoto || undefined}>
+                            {!coverPhoto && (
+                              <>
+                                <IconBuildingSvg aria-hidden />
+                                <OwnerPropMediaLabel>Property photo</OwnerPropMediaLabel>
+                              </>
+                            )}
+                            {photoCount > 0 && (
+                              <OwnerPropPhotoCount>
+                                1/{photoCount} photos
+                              </OwnerPropPhotoCount>
+                            )}
+                          </OwnerPropMedia>
+                        </OwnerPropCard>
+                      );
+                    })
+                  )}
+                </PropList>
+                {!listingsLoading && listings.length > 0 && listings.length < 2 && (
+                  <PropEmptyState>
+                    <PropEmptyText>
+                      List a second property to reach more buyers
+                    </PropEmptyText>
+                    <BtnOutline type="button" onClick={openAddProperty}>
+                      <IconPlusSvg aria-hidden /> Add property
+                    </BtnOutline>
+                  </PropEmptyState>
+                )}
+              </Card>
+
+              <Card>
+                <CardHead>
+                  <CardTitle>Recent inquiries</CardTitle>
+                  <CardAction type="button">View all</CardAction>
+                </CardHead>
+                <InquiryList>
+                  {DEMO_INQUIRIES.map(
+                    ({
+                      id,
+                      initials: inqInitials,
+                      name,
+                      message,
+                      time,
+                      tag,
+                      tagVariant,
+                      bg,
+                      color,
+                    }) => (
+                      <InquiryItem key={id}>
+                        <InquiryAvatar $bg={bg} $color={color}>
+                          {inqInitials}
+                        </InquiryAvatar>
+                        <InquiryBody>
+                          <InquiryHeader>
                             <InquiryName>{name}</InquiryName>
-                            <InquiryMsg>{message}</InquiryMsg>
-                            <InquiryTime>{time}</InquiryTime>
-                          </InquiryBody>
-                          <InquiryTag $variant={tagVariant}>{tag}</InquiryTag>
-                        </InquiryItem>
-                      ),
-                    )}
-                  </InquiryList>
-                </Card>
-              </TwoCol>
+                            <InquiryTag $variant={tagVariant}>{tag}</InquiryTag>
+                          </InquiryHeader>
+                          <InquiryMsg>{message}</InquiryMsg>
+                          <InquiryTime>{time}</InquiryTime>
+                        </InquiryBody>
+                      </InquiryItem>
+                    ),
+                  )}
+                </InquiryList>
+              </Card>
 
               <Card>
                 <CardHead>
                   <CardTitle>Account information</CardTitle>
-                  <BtnOutline type="button" style={{ fontSize: 11 }}>
-                    Edit
+                  <BtnOutline type="button">
+                    <IconEditSvg aria-hidden /> Edit
                   </BtnOutline>
                 </CardHead>
                 <InfoGrid>
-                  {accountFields.map(({ label, value, Icon, highlight }) => (
-                    <InfoRow key={label}>
-                      <Icon aria-hidden />
-                      <div>
-                        <InfoLbl>{label}</InfoLbl>
-                        <InfoVal style={highlight ? { color: highlight } : undefined}>
-                          {value}
-                        </InfoVal>
-                      </div>
-                    </InfoRow>
-                  ))}
+                  <AccountField>
+                    <AccountLabel htmlFor="account-full-name">Full name</AccountLabel>
+                    <AccountInput
+                      id="account-full-name"
+                      type="text"
+                      value={displayName}
+                      disabled
+                      readOnly
+                    />
+                  </AccountField>
+                  <AccountField>
+                    <AccountLabel htmlFor="account-email">Email</AccountLabel>
+                    <AccountInput
+                      id="account-email"
+                      type="text"
+                      value={email}
+                      disabled
+                      readOnly
+                    />
+                  </AccountField>
                 </InfoGrid>
               </Card>
             </Main>
           </Layout>
         </AppShell>
       </PageWrap>
-
     </>
   );
 };

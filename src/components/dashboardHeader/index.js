@@ -8,6 +8,7 @@ import {
   IconProperty973PinSvg,
 } from "@/assets";
 import { useLogout } from "@/utils/useLogout";
+import { useIsClientMounted } from "@/utils/useIsClientMounted";
 import { useStoredUser } from "@/utils/useStoredUser";
 import {
   Avatar,
@@ -38,6 +39,7 @@ const getInitials = (name) => {
 
 const DashboardHeader = () => {
   const user = useStoredUser();
+  const mounted = useIsClientMounted();
   const handleLogout = useLogout();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -45,6 +47,9 @@ const DashboardHeader = () => {
   const initials = getInitials(user?.fullName);
   const displayName = user?.fullName || "Property owner";
   const email = user?.email || "";
+  const chipInitials = mounted ? initials : "PO";
+  const chipDisplayName = mounted ? displayName : "Property owner";
+  const chipEmail = mounted ? email : "";
 
   useEffect(() => {
     if (!menuOpen) return undefined;
@@ -96,7 +101,7 @@ const DashboardHeader = () => {
               $open={menuOpen}
               onClick={() => setMenuOpen((open) => !open)}
             >
-              <Avatar>{initials}</Avatar>
+              <Avatar>{chipInitials}</Avatar>
               <UserName>My account</UserName>
               <ChevronIcon aria-hidden $open={menuOpen}>
                 <IconChevronDownSvg />
@@ -106,8 +111,8 @@ const DashboardHeader = () => {
             {menuOpen && (
               <Dropdown role="menu" aria-label="Account menu">
                 <DropdownUser>
-                  <DropdownName>{displayName}</DropdownName>
-                  {email ? <DropdownEmail>{email}</DropdownEmail> : null}
+                  <DropdownName>{chipDisplayName}</DropdownName>
+                  {chipEmail ? <DropdownEmail>{chipEmail}</DropdownEmail> : null}
                 </DropdownUser>
                 <SignOutBtn
                   type="button"

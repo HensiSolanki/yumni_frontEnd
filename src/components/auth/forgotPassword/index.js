@@ -10,9 +10,11 @@ import OtpForm from "@/components/auth/OtpForm";
 import Footer from "@/components/footer/index";
 import Header from "@/components/Header/Header";
 import { FormProvider } from "@/components/hook-form";
+import PhoneInput from "@/components/phone/PhoneInput";
 import { useRouter } from "@/i18n/navigation";
 import { forgotPasswordAction } from "@/redux/auth/action";
 import { PATH_AUTH } from "@/routes/path";
+import { formatMobileNumberForApi } from "@/constants/phoneCountries";
 import { forgotPasswordSchema } from "@/schemas/authSchema";
 
 import {
@@ -25,7 +27,6 @@ import {
   CityBackdrop,
   DividerRow,
   ErrorText,
-  Input,
   Label,
   LoginCard,
   LoginShell,
@@ -56,7 +57,7 @@ const ForgotPassword = () => {
   });
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors, isValid },
   } = methods;
@@ -64,13 +65,16 @@ const ForgotPassword = () => {
   const isVerifyDisabled = !isValid || isSubmitting;
 
   const onSubmit = async ({ mobileNumber }) => {
+    const formattedMobile = formatMobileNumberForApi(mobileNumber);
     setIsSubmitting(true);
     try {
       const response = await dispatch(
-        forgotPasswordAction({ mobileNumber }),
+        forgotPasswordAction({ mobileNumber: formattedMobile }),
       ).unwrap();
 
-      setSubmittedMobile(response?.data?.mobileNumber ?? mobileNumber);
+      setSubmittedMobile(
+        formatMobileNumberForApi(response?.data?.mobileNumber ?? formattedMobile),
+      );
       setMobileMasked(response?.data?.mobileMasked ?? "");
       setShowOtpInput(true);
     } catch (error) {
@@ -107,12 +111,14 @@ const ForgotPassword = () => {
 
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Label htmlFor="mobileNumber">Mobile number</Label>
-            <Input
+            <PhoneInput
               id="mobileNumber"
-              placeholder="+973  Mobile number"
-              {...register("mobileNumber")}
-              aria-invalid={Boolean(errors.mobileNumber)}
+              name="mobileNumber"
+              control={control}
+              placeholder="Mobile number"
+              variant="dark"
               disabled={showOtpInput}
+              aria-invalid={Boolean(errors.mobileNumber)}
             />
             {errors.mobileNumber && (
               <ErrorText>{errors.mobileNumber.message}</ErrorText>

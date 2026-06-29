@@ -116,5 +116,70 @@
     "city_saar": "Saar",
     "city_busaiteen": "Busaiteen",
     "city_hidd": "Hidd"
+  },
+  "OwnerPropertyForm": {
+    "title": "Add property",
+    "subtitle": "List your property as an owner",
+    "closeAria": "Close add property form",
+    "sections": {
+      "listingType": "How do you want to list?",
+      "basic": "Basic information",
+      "location": "Location",
+      "pricing": "Pricing",
+      "details": "Property details",
+      "features": "Features & amenities",
+      "media": "Description & photos",
+      "contact": "Contact & preferences"
+    },
+    "fields": {
+      "purpose": "Purpose",
+      "propertyType": "Property type",
+      "city": "City",
+      "district": "District / area",
+      "address": "Street address",
+      "price": "Price (BHD)",
+      "premiumPeriod": "Rent period",
+      "area": "Area (m²)",
+      "bedrooms": "Bedrooms",
+      "livingRooms": "Living rooms",
+      "wc": "Bathrooms (WC)",
+      "floor": "Floor",
+      "ageLessThan": "Property age",
+      "occupantType": "Occupant type",
+      "streetWidth": "Street width (m)",
+      "streetDirection": "Street direction",
+      "description": "Description",
+      "photos": "Property photos",
+      "contactPhone": "Contact phone",
+      "allowInquiries": "Allow inquiries from buyers/tenants",
+      "aqarPartnersAssistance": "Get help from Aqar partners"
+    },
+    "placeholders": {
+      "district": "e.g. Juffair Block 428",
+      "address": "Building, street, landmark (optional)",
+      "price": "Enter price in BHD",
+      "area": "e.g. 120",
+      "streetWidth": "e.g. 15",
+      "description": "Describe your property, highlights, and terms",
+      "contactPhone": "Mobile number"
+    },
+    "validation": {
+      "contactPhoneRequired": "Contact phone is required",
+      "occupantTypeRequired": "Occupant type is required for rental listings"
+    },
+    "feedback": {
+      "loginRequired": "Please log in to submit a listing. Your session may have expired."
+    },
+    "hints": {
+      "photos": "Upload up to 20 images. First photo is used as the cover.",
+      "coverPhoto": "Cover"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "submit": "Submit listing",
+      "update": "Save changes",
+      "submitting": "Saving…"
+    },
+    "editTitle": "Edit property"
   }
 }

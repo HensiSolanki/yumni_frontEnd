@@ -3,7 +3,10 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
-const apiProxyTarget = process.env.API_PROXY_TARGET;
+const apiProxyTarget =
+  process.env.API_PROXY_TARGET ??
+  process.env.NEXT_PUBLIC_API_URL ??
+  "http://localhost:4000";
 
 const nextConfig: NextConfig = {
   compiler: {
@@ -12,14 +15,16 @@ const nextConfig: NextConfig = {
 
   env: {
     NEXT_PUBLIC_PROJECT_ENV: process.env.NEXT_PUBLIC_PROJECT_ENV,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
   },
   // images: {
   //   domains: ["fetishfinder-media.dryrun.click"],
   // },
   reactStrictMode: false,
 
-  // Dev: browser calls same-origin /api-proxy/* → Next forwards to API (avoids CORS).
-  // Set API_PROXY_TARGET=https://admin.property973.com and NEXT_PUBLIC_API_BASE_URL=/api-proxy
+  // Dev: browser can call same-origin /api-proxy/* or /api-backend/* → Next forwards to API.
+  // Set NEXT_PUBLIC_API_URL=http://localhost:4000 for direct calls (recommended with Bearer auth).
   async rewrites() {
     if (!apiProxyTarget?.startsWith("http")) {
       return [];
@@ -28,6 +33,10 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api-proxy/:path*",
+        destination: `${origin}/:path*`,
+      },
+      {
+        source: "/api-backend/:path*",
         destination: `${origin}/:path*`,
       },
     ];

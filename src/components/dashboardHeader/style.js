@@ -84,7 +84,9 @@ export const UserMenuWrap = styled.div`
   position: relative;
 `;
 
-export const UserChip = styled.button`
+export const UserChip = styled.button.attrs({
+  suppressHydrationWarning: true,
+})`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -134,7 +136,9 @@ export const DropdownEmail = styled.div`
   word-break: break-word;
 `;
 
-export const SignOutBtn = styled.button`
+export const SignOutBtn = styled.button.attrs({
+  suppressHydrationWarning: true,
+})`
   display: flex;
   align-items: center;
   gap: 8px;

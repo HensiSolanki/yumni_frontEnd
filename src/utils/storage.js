@@ -1,12 +1,16 @@
 "use client";
 
 import { decodeData, encodeData } from "./jwt";
+import { notifyAuthSessionUpdated } from "./authEvents";
 
 export const saveData = (key, value) => {
   if (window) {
     try {
       const encryptedData = encodeData(value);
       window.localStorage.setItem(key, encryptedData);
+      if (key === "user") {
+        notifyAuthSessionUpdated();
+      }
     } catch (error) {
       return "";
     }
@@ -30,6 +34,9 @@ export const removeData = (key) => {
   if (window) {
     try {
       window.localStorage.removeItem(key);
+      if (key === "user") {
+        notifyAuthSessionUpdated();
+      }
     } catch (error) {
       return "";
     }

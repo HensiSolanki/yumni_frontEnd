@@ -80,6 +80,7 @@ const RealEstateCardComponent = ({ listing = {}, onViewDetails }) => {
     agencyName,
     listedAgo,
     photoLabel,
+    photoUrl,
   } = { ...realEstateCardDefaultListing, ...listing };
   const popupTargetId = listing?.id || title;
   const isPopupOpenForThisCard =
@@ -151,13 +152,15 @@ const RealEstateCardComponent = ({ listing = {}, onViewDetails }) => {
           </FooterRow>
         </DetailsColumn>
 
-        <MediaColumn>
-          <MediaPlaceholder>
-            <MediaIconWrap aria-hidden>
-              <IconBuildingSvg width={48} height={48} />
-            </MediaIconWrap>
-            Property photo
-          </MediaPlaceholder>
+        <MediaColumn $photo={photoUrl || undefined}>
+          {!photoUrl ? (
+            <MediaPlaceholder>
+              <MediaIconWrap aria-hidden>
+                <IconBuildingSvg width={48} height={48} />
+              </MediaIconWrap>
+              Property photo
+            </MediaPlaceholder>
+          ) : null}
           <MediaOverlayTop>
             <IconCircleButton type="button" aria-label="More options">
               <IconMoreHorizontalSvg aria-hidden />

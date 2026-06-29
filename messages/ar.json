@@ -116,5 +116,70 @@
     "city_saar": "سار",
     "city_busaiteen": "البسيتين",
     "city_hidd": "الحد"
+  },
+  "OwnerPropertyForm": {
+    "title": "إضافة عقار",
+    "subtitle": "أدرج عقارك بصفتك مالكًا",
+    "closeAria": "إغلاق نموذج إضافة العقار",
+    "sections": {
+      "listingType": "كيف تريد الإدراج؟",
+      "basic": "المعلومات الأساسية",
+      "location": "الموقع",
+      "pricing": "التسعير",
+      "details": "تفاصيل العقار",
+      "features": "المميزات والمرافق",
+      "media": "الوصف والصور",
+      "contact": "التواصل والتفضيلات"
+    },
+    "fields": {
+      "purpose": "الغرض",
+      "propertyType": "نوع العقار",
+      "city": "المدينة",
+      "district": "الحي / المنطقة",
+      "address": "عنوان الشارع",
+      "price": "السعر (د.ب)",
+      "premiumPeriod": "فترة الإيجار",
+      "area": "المساحة (م²)",
+      "bedrooms": "غرف النوم",
+      "livingRooms": "غرف المعيشة",
+      "wc": "دورات المياه",
+      "floor": "الطابق",
+      "ageLessThan": "عمر العقار",
+      "occupantType": "نوع الساكن",
+      "streetWidth": "عرض الشارع (م)",
+      "streetDirection": "اتجاه الشارع",
+      "description": "الوصف",
+      "photos": "صور العقار",
+      "contactPhone": "هاتف التواصل",
+      "allowInquiries": "السماح بالاستفسارات من المشترين/المستأجرين",
+      "aqarPartnersAssistance": "الحصول على مساعدة شركاء عقار"
+    },
+    "placeholders": {
+      "district": "مثال: الجفير بلوك 428",
+      "address": "المبنى، الشارع، معلم قريب (اختياري)",
+      "price": "أدخل السعر بالدينار البحريني",
+      "area": "مثال: 120",
+      "streetWidth": "مثال: 15",
+      "description": "صف عقارك ومميزاته وشروطه",
+      "contactPhone": "رقم الجوال"
+    },
+    "validation": {
+      "contactPhoneRequired": "رقم التواصل مطلوب",
+      "occupantTypeRequired": "نوع الساكن مطلوب لإعلانات الإيجار"
+    },
+    "feedback": {
+      "loginRequired": "يرجى تسجيل الدخول لإرسال الإعلان. ربما انتهت صلاحية جلستك."
+    },
+    "hints": {
+      "photos": "ارفع حتى 20 صورة. الصورة الأولى تُستخدم كغلاف.",
+      "coverPhoto": "الغلاف"
+    },
+    "actions": {
+      "cancel": "إلغاء",
+      "submit": "إرسال الإعلان",
+      "update": "حفظ التغييرات",
+      "submitting": "جاري الحفظ…"
+    },
+    "editTitle": "تعديل العقار"
   }
 }

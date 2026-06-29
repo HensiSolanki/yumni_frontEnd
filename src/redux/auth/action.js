@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { setAuthSessionCookie } from "@/utils/authCookie";
+import { persistAuthSession } from "@/utils/authSession";
 import { getData, saveData } from "@/utils/storage";
 import {
   forgotPassword,
@@ -20,20 +21,6 @@ const getApiSuccessMessage = (result, fallback) =>
 
 const isApiFailure = (result) =>
   result?.status === false || result?.data?.success === false;
-
-const persistLoginSession = (apiData) => {
-  const session = apiData?.data ?? apiData;
-  const token = session?.accessToken ?? session?.token ?? apiData?.token;
-  if (!token) return;
-
-  const profile = session?.user ?? apiData?.user;
-  saveData("user", {
-    ...(profile && typeof profile === "object" ? profile : {}),
-    token,
-    refreshToken: session?.refreshToken ?? apiData?.refreshToken,
-  });
-  setAuthSessionCookie();
-};
 
 export const registerAction = createAsyncThunk(
   "authSlice/registerAction",
@@ -80,7 +67,7 @@ export const loginAction = createAsyncThunk(
       }
 
       const data = result.data;
-      persistLoginSession(data);
+      persistAuthSession(data);
 
       toast.success(getApiSuccessMessage(result, "Login successful"));
       return data;
@@ -110,19 +97,18 @@ export const verifyOtpAction = createAsyncThunk(
       }
 
       const existingUser = getData("user") || {};
-      const sessionUser = {
-        ...existingUser,
-        ...data,
-        token: data?.token ?? existingUser?.token,
-        fullName: data?.fullName ?? existingUser?.fullName,
-        mobileNumber: data?.mobileNumber ?? existingUser?.mobileNumber,
-      };
+      const storedUser =
+        persistAuthSession(data, existingUser) ??
+        persistAuthSession(data?.data, existingUser);
 
-      saveData("user", sessionUser);
-      setAuthSessionCookie();
+      if (!storedUser) {
+        const message = getApiErrorMessage(result, "OTP verified but no access token returned");
+        toast.error(message);
+        return rejectWithValue(message);
+      }
 
       toast.success(getApiSuccessMessage(result, "OTP verified successfully"));
-      return { ...sessionUser, success: true };
+      return { ...storedUser, success: true };
     } catch (err) {
       const message =
         err?.response?.data?.message || err.message || "Something went wrong";

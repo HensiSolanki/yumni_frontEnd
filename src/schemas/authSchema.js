@@ -1,9 +1,6 @@
 import * as yup from "yup";
-import {
-  isValidPhoneNumber,
-  normalizeMobileNumber,
-  PHONE_VALIDATION_MESSAGE,
-} from "@/constants/phoneCountries";
+
+import { phoneNumberField } from "@/schemas/phoneSchema";
 
 const fullNameField = yup
   .string()
@@ -17,14 +14,7 @@ const emailField = yup
   .required("Email is required")
   .email("Enter a valid email address");
 
-const mobileNumberField = yup
-  .string()
-  .trim()
-  .transform(normalizeMobileNumber)
-  .required("Mobile number is required")
-  .test("valid-phone", PHONE_VALIDATION_MESSAGE, (value) =>
-    !value || isValidPhoneNumber(value),
-  );
+const mobileNumberField = phoneNumberField();
 
 const passwordField = yup
   .string()

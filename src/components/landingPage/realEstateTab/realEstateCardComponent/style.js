@@ -33,6 +33,15 @@ export const CardStack = styled.div`
   }
 `;
 
+export const EmptyState = styled.p`
+  margin: 0;
+  padding: 24px 0 32px;
+  text-align: center;
+  color: #5f6b76;
+  font-size: 15px;
+  line-height: 1.5;
+`;
+
 export const Card = styled.article`
   position: relative;
   display: flex;
@@ -285,7 +294,10 @@ export const MediaColumn = styled.div`
   flex: 0 0 42%;
   min-width: 0;
   min-height: 220px;
-  background: var(--color-brand-soft);
+  background: ${({ $photo }) => ($photo ? "#f1efe8" : "var(--color-brand-soft)")};
+  background-image: ${({ $photo }) => ($photo ? `url(${$photo})` : "none")};
+  background-size: cover;
+  background-position: center;
   border-left: 1px solid #e8dfe1;
 
   @media (max-width: 800px) {

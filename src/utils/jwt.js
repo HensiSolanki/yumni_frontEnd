@@ -1,9 +1,20 @@
 import jwt from "jwt-simple";
 
+const getStorageSecret = () =>
+  process.env.SECRET_KEY ?? process.env.NEXT_PUBLIC_STORAGE_KEY ?? null;
+
 export const encodeData = (data) => {
-  return jwt.encode(data, process.env.SECRET_KEY);
+  const secret = getStorageSecret();
+  if (!secret) {
+    return JSON.stringify(data);
+  }
+  return jwt.encode(data, secret);
 };
 
 export const decodeData = (encryptedData) => {
-  return jwt.decode(encryptedData, process.env.SECRET_KEY);
+  const secret = getStorageSecret();
+  if (!secret) {
+    return JSON.parse(encryptedData);
+  }
+  return jwt.decode(encryptedData, secret);
 };

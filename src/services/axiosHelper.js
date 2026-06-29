@@ -1,5 +1,6 @@
 import { PATH_AUTH } from "@/routes/path";
 import { clearAuthSessionCookie } from "@/utils/authCookie";
+import { getAuthHeaders } from "@/utils/authToken";
 import axiosInstance from "@/utils/axios";
 import { getData } from "@/utils/storage";
 import { toast } from "react-toastify";
@@ -27,11 +28,9 @@ export const axiosPost = async (
   const user = getData("user");
   try {
     const result = await axiosInstance.post(url, data, {
-      headers: {
+      headers: getAuthHeaders({
         "Content-Type": contentType,
-        Authorization: user?.token ? `Bearer ${user.token}` : null,
-        // userId: !data?.IsHeader ? undefined : data.id,
-      },
+      }),
     });
     response.data = result?.data || result?.data?.data;
     response.status = result?.status;
@@ -72,14 +71,12 @@ export const axiosGet = async (
 ) => {
   let response = {};
   const user = getData("user");
-  const authToken = token ?? user?.token ?? user?.accessToken;
 
   try {
     const result = await axiosInstance.get(url, {
-      headers: {
+      headers: getAuthHeaders({
         "Content-Type": contentType,
-        Authorization: authToken ? `Bearer ${authToken}` : null,
-      },
+      }),
       params,
     });
     response.data = result.data;
@@ -114,10 +111,9 @@ export const axiosPatch = async (
   const user = getData("user");
   try {
     const result = await axiosInstance.patch(url, data, {
-      headers: {
+      headers: getAuthHeaders({
         "Content-Type": contentType,
-        Authorization: user?.token ? `Bearer ${user.token}` : null,
-      },
+      }),
     });
     response = result.data;
     response.status = result.data?.status || [200, 201].includes(result.status);
@@ -156,6 +152,45 @@ export const axiosPut = async (url, data, contentType = "application/json") => {
   return response;
 };
 
+export const axiosPostFormData = async (url, formData) => {
+  let response = {};
+  const user = getData("user");
+  try {
+    const result = await axiosInstance.post(url, formData, {
+      headers: getAuthHeaders(),
+    });
+    response.data = result?.data || result?.data?.data;
+    response.status = result?.status;
+    if (result?.data?.success === false) {
+      response.status = false;
+      response.message =
+        result?.data?.message || "something went wrong";
+    }
+  } catch (e) {
+    if (!e.response?.data?.success) {
+      if (e.response?.status === 401) {
+        if (e.response?.data?.isLoggedOut) {
+          if (user) {
+            clearSession();
+            window.location.href = PATH_AUTH.login;
+          }
+        }
+      }
+    }
+    response.status = false;
+    response.message =
+      e?.response?.data?.message ||
+      e?.response?.data?.errors?.[0]?.message ||
+      e?.response?.data?.errors?.[0] ||
+      "something went wrong";
+    response.data = e?.response?.data || e;
+    if (e?.response?.data?.isBanned == true) {
+      banAccount(e?.response?.data);
+    }
+  }
+  return response;
+};
+
 export const axiosDelete = async (
   url,
   data,
@@ -165,10 +200,9 @@ export const axiosDelete = async (
   const user = getData("user");
   try {
     const result = await axiosInstance.delete(url, {
-      headers: {
+      headers: getAuthHeaders({
         "Content-Type": contentType,
-        Authorization: user?.token ? `Bearer ${user.token}` : null,
-      },
+      }),
     });
     response = result.data;
     response.status = [200, 201].includes(result.status);

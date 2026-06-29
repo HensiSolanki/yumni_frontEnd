@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import LoginCityBackdropSvg from "@/assets/LoginCityBackdropSvg.svg";
 import { IconEyeClosedSvg, IconEyeOpenSvg } from "@/assets";
 import { FormProvider } from "@/components/hook-form";
+import PhoneInput from "@/components/phone/PhoneInput";
 import { loginSchema, registerSchema } from "@/schemas/authSchema";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -38,6 +39,7 @@ import {
   Title,
 } from "./style";
 import { loginAction, registerAction } from "@/redux/auth/action";
+import { formatMobileNumberForApi } from "@/constants/phoneCountries";
 import { useDispatch } from "react-redux";
 
 const AUTH_COPY = {
@@ -59,8 +61,10 @@ const AUTH_COPY = {
 
 const AuthFormFields = ({
   register,
+  control,
   errors,
   isLogin,
+  formMode,
   onForgotPassword,
   showPassword,
   onTogglePassword,
@@ -91,10 +95,13 @@ const AuthFormFields = ({
     )}
 
     <Label htmlFor="mobileNumber">Mobile number</Label>
-    <Input
+    <PhoneInput
+      key={formMode}
       id="mobileNumber"
-      placeholder="+973  Mobile number"
-      {...register("mobileNumber")}
+      name="mobileNumber"
+      control={control}
+      placeholder="Mobile number"
+      variant="dark"
       aria-invalid={Boolean(errors.mobileNumber)}
     />
     {errors.mobileNumber && <ErrorText>{errors.mobileNumber.message}</ErrorText>}
@@ -149,6 +156,7 @@ const LoginPage = () => {
   });
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -174,14 +182,15 @@ const LoginPage = () => {
   }, [router]);
 
   const onSubmit = async (data) => {
-    sessionStorage.setItem(PENDING_MOBILE_KEY, data.mobileNumber);
+    const mobileNumber = formatMobileNumberForApi(data.mobileNumber);
+    sessionStorage.setItem(PENDING_MOBILE_KEY, mobileNumber);
 
     try {
       if (isLogin) {
         await dispatch(
           loginAction({
             password: data.password,
-            mobileNumber: data.mobileNumber,
+            mobileNumber,
           }),
         ).unwrap();
       } else {
@@ -190,7 +199,7 @@ const LoginPage = () => {
             password: data.password,
             fullName: data.fullName,
             email: data.email,
-            mobileNumber: data.mobileNumber,
+            mobileNumber,
           }),
         ).unwrap();
       }
@@ -225,8 +234,10 @@ const LoginPage = () => {
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <AuthFormFields
               register={register}
+              control={control}
               errors={errors}
               isLogin={isLogin}
+              formMode={mode}
               onForgotPassword={handleForgotPassword}
               showPassword={showPassword}
               onTogglePassword={handleTogglePassword}

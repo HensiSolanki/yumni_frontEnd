@@ -4,8 +4,10 @@ import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 
 import { useRouter } from "@/i18n/navigation";
-import { PATH_AUTH } from "@/routes/path";
-import { setUser } from "@/redux/auth/slice";
+import { ROOT } from "@/routes/path";
+import { setHeaderTabOptions } from "@/redux/header/slice";
+import { setToken, setUser } from "@/redux/auth/slice";
+import { setUserData } from "@/redux/dashboard/slice";
 import { clearAuthSessionCookie } from "@/utils/authCookie";
 import { removeData } from "@/utils/storage";
 
@@ -17,6 +19,9 @@ export const useLogout = () => {
     removeData("user");
     clearAuthSessionCookie();
     dispatch(setUser(null));
-    router.push(PATH_AUTH.login);
+    dispatch(setToken(null));
+    dispatch(setUserData(null));
+    dispatch(setHeaderTabOptions(0));
+    router.replace(ROOT);
   }, [dispatch, router]);
 };

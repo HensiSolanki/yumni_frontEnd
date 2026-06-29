@@ -9,4 +9,13 @@ export const API_ROUTER = {
 
   // Dashboard
   GET_USER_PROFILE: "/auth/me",
+  REFRESH_TOKEN: "/auth/refresh",
+
+  // Owner property listings
+  CREATE_LISTING: "/listings",
+  LISTINGS: "/listings",
+  PUBLIC_LISTINGS: "/listings/public",
+  LISTING_BY_ID: (id) => `/listings/${id}`,
+  LISTING_PHOTOS: (id) => `/listings/${id}/photos`,
+  LISTING_PHOTO_BY_ID: (listingId, photoId) => `/listings/${listingId}/photos/${photoId}`,
 };

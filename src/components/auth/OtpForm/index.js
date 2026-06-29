@@ -21,6 +21,7 @@ import {
   verifyForgotOtpAction,
   verifyOtpAction,
 } from "@/redux/auth/action";
+import { formatMobileNumberForApi } from "@/constants/phoneCountries";
 import { setResetToken } from "@/redux/auth/slice";
 import { PATH_AUTH } from "@/routes/path";
 
@@ -99,11 +100,12 @@ const OtpForm = ({
     }
 
     setIsVerifying(true);
+    const formattedMobile = formatMobileNumberForApi(mobileNumber);
 
     try {
       if (forgotPassword) {
         const response = await dispatch(
-          verifyForgotOtpAction({ otp, mobileNumber }),
+          verifyForgotOtpAction({ otp, mobileNumber: formattedMobile }),
         ).unwrap();
 
         const token =
@@ -124,7 +126,7 @@ const OtpForm = ({
         router.push(PATH_AUTH.resetPassword);
       } else {
         const response = await dispatch(
-          verifyOtpAction({ otp, mobileNumber }),
+          verifyOtpAction({ otp, mobileNumber: formattedMobile }),
         ).unwrap();
 
         if (response?.success === true) {
