@@ -18,4 +18,9 @@ export const API_ROUTER = {
   LISTING_BY_ID: (id) => `/listings/${id}`,
   LISTING_PHOTOS: (id) => `/listings/${id}/photos`,
   LISTING_PHOTO_BY_ID: (listingId, photoId) => `/listings/${listingId}/photos/${photoId}`,
+
+  // Favourites (wishlist)
+  FAVOURITES: "/favourites",
+  FAVOURITE_BY_LISTING_ID: (listingId) => `/favourites/${listingId}`,
 };
+

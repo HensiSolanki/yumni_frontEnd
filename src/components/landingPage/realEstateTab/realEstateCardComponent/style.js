@@ -370,15 +370,21 @@ export const IconCircleButton = styled.button`
   border: none;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.95);
-  color: #5f6c72;
+  color: ${({ $active }) => ($active ? "#ce1126" : "#5f6c72")};
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
 
   &:hover {
     background: #ffffff;
   }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 `;
+
 
 export const PhotoCountPill = styled.span`
   position: absolute;

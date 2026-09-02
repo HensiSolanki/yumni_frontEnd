@@ -21,7 +21,9 @@ import IconTrashSvg from "./IconTrashSvg.svg";
 import IconCrosshairSvg from "./IconCrosshairSvg.svg";
 import IconEyeOpenSvg from "./IconEyeOpenSvg.svg";
 import IconEyeClosedSvg from "./IconEyeClosedSvg.svg";
+import IconHeartFilledSvg from "./IconHeartFilledSvg.svg";
 import IconHeartOutlineSvg from "./IconHeartOutlineSvg.svg";
+
 import IconMapFoldedSvg from "./IconMapFoldedSvg.svg";
 import IconMoreHorizontalSvg from "./IconMoreHorizontalSvg.svg";
 import IconPhoneSvg from "./IconPhoneSvg.svg";
@@ -81,7 +83,9 @@ export {
   IconCrosshairSvg,
   IconEyeOpenSvg,
   IconEyeClosedSvg,
+  IconHeartFilledSvg,
   IconHeartOutlineSvg,
+
   IconMapFoldedSvg,
   IconMoreHorizontalSvg,
   IconPhoneSvg,

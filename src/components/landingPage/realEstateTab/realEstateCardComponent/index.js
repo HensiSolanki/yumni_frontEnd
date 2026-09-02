@@ -5,6 +5,7 @@ import {
   IconBedPropertySvg,
   IconBuildingSvg,
   IconCarPropertySvg,
+  IconHeartFilledSvg,
   IconHeartOutlineSvg,
   IconMoreHorizontalSvg,
   IconPhoneSvg,
@@ -13,7 +14,9 @@ import {
   IconSofaPropertySvg,
 } from "@/assets";
 import { realEstateCardDefaultListing } from "@/constants/options";
+import { useFavouriteToggle } from "@/utils/useFavouriteToggle";
 import CallNowPopup from "./callNowPopup";
+
 
 import {
   ActionButtons,
@@ -61,11 +64,16 @@ const FEATURE_ICON_MAP = {
   car: IconCarPropertySvg,
 };
 
-const RealEstateCardComponent = ({ listing = {}, onViewDetails }) => {
+const RealEstateCardComponent = ({
+  listing = {},
+  sourceListing = null,
+  onViewDetails,
+}) => {
   const { callNowPopupOpen, callNowPopupTargetId } = useSelector(
     (state) => state.landingPageFilterSlice,
   );
   const dispatch = useDispatch();
+  const { isFavourite, isToggling, toggleFavourite } = useFavouriteToggle();
   const {
     tags,
     priceAnnual,
@@ -83,8 +91,11 @@ const RealEstateCardComponent = ({ listing = {}, onViewDetails }) => {
     photoUrl,
   } = { ...realEstateCardDefaultListing, ...listing };
   const popupTargetId = listing?.id || title;
+  const listingId = listing?.id;
+  const favourited = isFavourite(listingId);
   const isPopupOpenForThisCard =
     callNowPopupOpen && callNowPopupTargetId === popupTargetId;
+
 
   return (
     <>
@@ -165,9 +176,25 @@ const RealEstateCardComponent = ({ listing = {}, onViewDetails }) => {
             <IconCircleButton type="button" aria-label="More options">
               <IconMoreHorizontalSvg aria-hidden />
             </IconCircleButton>
-            <IconCircleButton type="button" aria-label="Save to wishlist">
-              <IconHeartOutlineSvg aria-hidden />
+            <IconCircleButton
+              type="button"
+              $active={favourited}
+              aria-label={
+                favourited ? "Remove from favourites" : "Add to favourites"
+              }
+              disabled={!listingId || isToggling(listingId)}
+              onClick={(event) => {
+                event.stopPropagation();
+                toggleFavourite(sourceListing || listing);
+              }}
+            >
+              {favourited ? (
+                <IconHeartFilledSvg aria-hidden />
+              ) : (
+                <IconHeartOutlineSvg aria-hidden />
+              )}
             </IconCircleButton>
+
             <IconCircleButton type="button" aria-label="Share">
               <IconShareNodesSvg aria-hidden />
             </IconCircleButton>

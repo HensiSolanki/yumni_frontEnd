@@ -652,7 +652,8 @@ export const IconActionBtn = styled.button.attrs({
   border-radius: ${radiusMd};
   background: #fff;
   cursor: pointer;
-  color: ${({ $danger }) => ($danger ? "#a32d2d" : "#1a1a18")};
+  color: ${({ $danger, $favourite }) =>
+    $danger || $favourite ? "#a32d2d" : "#1a1a18"};
 
   svg {
     width: 15px;
@@ -670,6 +671,7 @@ export const IconActionBtn = styled.button.attrs({
 `;
 
 export const OwnerPropMedia = styled.div`
+
   width: 200px;
   flex-shrink: 0;
   background: #f1efe8;

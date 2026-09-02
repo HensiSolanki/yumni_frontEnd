@@ -133,7 +133,13 @@ export const HeroIconButton = styled.button`
   justify-content: center;
   color: #fff;
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 `;
+
 
 export const PhotoPill = styled.span`
   background: rgba(0, 0, 0, 0.45);

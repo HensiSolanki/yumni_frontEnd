@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
+  IconHeartFilledSvg,
   IconHeartOutlineSvg,
   IconMapFoldedSvg,
   IconMoreHorizontalSvg,
@@ -14,6 +15,7 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/footer";
 import CallNowPopup from "@/components/landingPage/realEstateTab/realEstateCardComponent/callNowPopup";
 import { useRouter } from "@/i18n/navigation";
+import { listFavouritesAction } from "@/redux/favourites/action";
 import { fetchPublicListingsAction } from "@/redux/homepage/action";
 import { setSelectedListing } from "@/redux/homepage/slice";
 import {
@@ -21,7 +23,10 @@ import {
   setCallNowPopupTargetId,
 } from "@/redux/landingPageFilter/slice";
 import { PATH_PROPERTY } from "@/routes/path";
+import { getAuthToken } from "@/utils/authToken";
 import { formatListingPrice } from "@/utils/listingDisplay";
+import { useFavouriteToggle } from "@/utils/useFavouriteToggle";
+
 import {
   getListingActionFacts,
   getListingAgentInitials,
@@ -117,7 +122,7 @@ const PropertyDetail = ({ listingId }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("overview");
-  const [liked, setLiked] = useState(false);
+  const { isFavourite, isToggling, toggleFavourite } = useFavouriteToggle();
 
   const { items, selectedListing, isLoading } = useSelector(
     (state) => state.homepageSlice,
@@ -131,6 +136,12 @@ const PropertyDetail = ({ listingId }) => {
       dispatch(fetchPublicListingsAction());
     }
   }, [dispatch, items.length, isLoading]);
+
+  useEffect(() => {
+    if (!getAuthToken()) return;
+    dispatch(listFavouritesAction({ page: 1, limit: 100 }));
+  }, [dispatch]);
+
 
   const listing = useMemo(() => {
     if (selectedListing?.id === listingId) return selectedListing;
@@ -247,12 +258,22 @@ const PropertyDetail = ({ listingId }) => {
             <HeroIconRow>
               <HeroIconButton
                 type="button"
-                $active={liked}
-                aria-label="Save to wishlist"
-                onClick={() => setLiked((value) => !value)}
+                $active={isFavourite(listing.id)}
+                aria-label={
+                  isFavourite(listing.id)
+                    ? "Remove from favourites"
+                    : "Add to favourites"
+                }
+                disabled={isToggling(listing.id)}
+                onClick={() => toggleFavourite(listing)}
               >
-                <IconHeartOutlineSvg aria-hidden width={18} height={18} />
+                {isFavourite(listing.id) ? (
+                  <IconHeartFilledSvg aria-hidden width={18} height={18} />
+                ) : (
+                  <IconHeartOutlineSvg aria-hidden width={18} height={18} />
+                )}
               </HeroIconButton>
+
               <HeroIconButton type="button" aria-label="Share listing">
                 <IconShareNodesSvg aria-hidden width={18} height={18} />
               </HeroIconButton>

@@ -7,6 +7,7 @@ import { authSliceReducer } from "./auth/slice";
 import { dashboardSliceReducer } from "./dashboard/slice";
 import { listingsSliceReducer } from "./listings/slice";
 import { homepageSliceReducer } from "./homepage/slice";
+import { favouritesSliceReducer } from "./favourites/slice";
 
 
 
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
     dashboardSlice: dashboardSliceReducer,
     listingsSlice: listingsSliceReducer,
     homepageSlice: homepageSliceReducer,
+    favouritesSlice: favouritesSliceReducer,
     headerApiSlice: headerApiSliceReducer,
     landingPageFilterSlice: landingPageFilterSliceReducer,
     addListingApiSlice: addListingApiSliceReducer,

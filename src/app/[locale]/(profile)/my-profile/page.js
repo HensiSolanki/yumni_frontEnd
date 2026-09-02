@@ -12,6 +12,7 @@ import {
   IconChevronDownSvg,
   IconDashboardSvg,
   IconEditSvg,
+  IconHeartFilledSvg,
   IconHelpSvg,
   IconMailSvg,
   IconMapFoldedSvg,
@@ -23,6 +24,7 @@ import {
   IconStarFilledSvg,
   IconTrashSvg,
 } from "@/assets";
+
 import DashboardHeader from "@/components/dashboardHeader";
 import AddPropertyForm from "@/components/owner/AddPropertyForm";
 import DeletePropertyModal from "@/components/owner/DeletePropertyModal";
@@ -122,6 +124,10 @@ import {
   deleteListingAction,
   listListingsAction,
 } from "../../../../redux/listings/action";
+import {
+  listFavouritesAction,
+  removeFavouriteAction,
+} from "../../../../redux/favourites/action";
 import { getAuthToken } from "@/utils/authToken";
 import {
   formatListingPrice,
@@ -132,9 +138,12 @@ import {
   getListingStatusLabel,
   getListingTypeTag,
 } from "@/utils/listingDisplay";
+import { PATH_PROPERTY } from "@/routes/path";
+import { useRouter } from "@/i18n/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback, useEffect, useState } from "react";
 import { setUserData } from "../../../../redux/dashboard/slice";
+
 
 const FEATURE_ICON_MAP = {
   ruler: IconRulerAreaSvg,
@@ -207,6 +216,7 @@ const MyProfilePage = () => {
   const user = useStoredUser();
   const mounted = useIsClientMounted();
   const dispatch = useDispatch();
+  const router = useRouter();
   const [addPropertyOpen, setAddPropertyOpen] = useState(false);
   const [editingListing, setEditingListing] = useState(null);
   const [listingToDelete, setListingToDelete] = useState(null);
@@ -214,6 +224,14 @@ const MyProfilePage = () => {
   const listings = useSelector((state) => state.listingsSlice?.items ?? []);
   const listingsLoading = useSelector((state) => state.listingsSlice?.isLoading);
   const listingsSubmitting = useSelector((state) => state.listingsSlice?.isSubmitting);
+  const favourites = useSelector((state) => state.favouritesSlice?.items ?? []);
+  const favouritesLoading = useSelector(
+    (state) => state.favouritesSlice?.isLoading,
+  );
+  const favouriteTogglingId = useSelector(
+    (state) => state.favouritesSlice?.togglingId,
+  );
+
   const resolvedName = user?.fullName || UserData?.fullName || "Property owner";
   const resolvedEmail = user?.email || UserData?.email || "—";
   const resolvedPhone = user?.mobileNumber || UserData?.mobileNumber || "";
@@ -243,10 +261,17 @@ const MyProfilePage = () => {
     await dispatch(listListingsAction({ page: 1, limit: 20 }));
   }, [dispatch]);
 
+  const fetchFavourites = useCallback(async () => {
+    if (!getAuthToken()) return;
+    await dispatch(listFavouritesAction({ page: 1, limit: 50 }));
+  }, [dispatch]);
+
   useEffect(() => {
     GetUserProfile();
     fetchListings();
-  }, [GetUserProfile, fetchListings]);
+    fetchFavourites();
+  }, [GetUserProfile, fetchListings, fetchFavourites]);
+
 
   const openAddProperty = () => {
     setEditingListing(null);
@@ -280,7 +305,20 @@ const MyProfilePage = () => {
     }
   };
 
+  const handleRemoveFavourite = async (listing) => {
+    if (!listing?.id || favouriteTogglingId === String(listing.id)) return;
+    await dispatch(removeFavouriteAction(listing.id));
+  };
+
+
+  const handleOpenFavourite = (listing) => {
+    if (!listing?.id) return;
+    router.push(PATH_PROPERTY.detail(listing.id));
+  };
+
   const propertyCount = listings.length;
+  const favouriteCount = favourites.length;
+
 
   return (
     <>
@@ -335,8 +373,16 @@ const MyProfilePage = () => {
                 <IconPlusSvg aria-hidden />
                 Add property
               </SidebarItem>
+              <SidebarItem type="button">
+                <SidebarItemInner>
+                  <IconHeartFilledSvg aria-hidden />
+                  Favourite properties
+                </SidebarItemInner>
+                <SidebarBadge>{favouriteCount}</SidebarBadge>
+              </SidebarItem>
 
               <SidebarSectionLabel>Activity</SidebarSectionLabel>
+
               <SidebarItem type="button">
                 <SidebarItemInner>
                   <IconMessageSvg aria-hidden />
@@ -472,11 +518,12 @@ const MyProfilePage = () => {
                   <StatChg $muted>This month</StatChg>
                 </StatCard>
                 <StatCard>
-                  <StatLbl>Wishlist saves</StatLbl>
-                  <StatVal>31</StatVal>
-                  <StatChg $down>3 this week</StatChg>
+                  <StatLbl>Favourite properties</StatLbl>
+                  <StatVal>{favouriteCount}</StatVal>
+                  <StatChg $muted>Saved by you</StatChg>
                 </StatCard>
               </StatsRow>
+
 
               <Card>
                 <CardHead>
@@ -596,7 +643,121 @@ const MyProfilePage = () => {
 
               <Card>
                 <CardHead>
+                  <CardTitle>Favourite properties</CardTitle>
+                  <CardAction type="button">View all</CardAction>
+                </CardHead>
+                <PropList>
+                  {favouritesLoading ? (
+                    <OwnerPropCard>
+                      <OwnerPropBody>
+                        <OwnerPropTitle>Loading favourites…</OwnerPropTitle>
+                      </OwnerPropBody>
+                    </OwnerPropCard>
+                  ) : favourites.length === 0 ? (
+                    <PropEmptyState>
+                      <PropEmptyText>
+                        Properties you save will appear here
+                      </PropEmptyText>
+                    </PropEmptyState>
+                  ) : (
+                    favourites.map((listing) => {
+                      const coverPhoto = listing?.photos?.[0]?.url;
+                      const photoCount = listing?.photos?.length ?? 0;
+                      const features = getListingFeatureItems(listing);
+                      const isRemoving = favouriteTogglingId === String(listing.id);
+
+
+                      return (
+                        <OwnerPropCard key={listing.id}>
+                          <OwnerPropBody>
+                            <OwnerPropTags>
+                              <OwnerPropTag $brand>
+                                {getListingPurposeTag(listing)}
+                              </OwnerPropTag>
+                              <OwnerPropTag>{getListingTypeTag(listing)}</OwnerPropTag>
+                            </OwnerPropTags>
+                            <OwnerPropTitle>{getListingCardTitle(listing)}</OwnerPropTitle>
+                            <OwnerPropLoc>{getListingLocation(listing)}</OwnerPropLoc>
+                            {features.length > 0 && (
+                              <OwnerPropFeatures>
+                                {features.map((item) => {
+                                  const IconComponent = FEATURE_ICON_MAP[item.iconKey];
+                                  return (
+                                    <OwnerPropFeature key={item.text}>
+                                      {IconComponent ? (
+                                        <IconComponent aria-hidden />
+                                      ) : null}
+                                      {item.text}
+                                    </OwnerPropFeature>
+                                  );
+                                })}
+                              </OwnerPropFeatures>
+                            )}
+                            <OwnerPropFooter>
+                              <OwnerPropPriceBlock>
+                                <OwnerPropPrice>
+                                  {formatListingPrice(listing)}
+                                </OwnerPropPrice>
+                                <OwnerPropListed>Saved favourite</OwnerPropListed>
+                              </OwnerPropPriceBlock>
+                              <OwnerPropActions>
+                                <IconActionBtn
+                                  type="button"
+                                  aria-label="View property"
+                                  onClick={() => handleOpenFavourite(listing)}
+                                >
+                                  <IconArrowUpRightSvg aria-hidden />
+                                </IconActionBtn>
+                                <IconActionBtn
+                                  type="button"
+                                  $favourite
+                                  aria-label="Remove from favourites"
+                                  disabled={isRemoving}
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    handleRemoveFavourite(listing);
+                                  }}
+                                >
+                                  <IconHeartFilledSvg aria-hidden />
+                                </IconActionBtn>
+                              </OwnerPropActions>
+                            </OwnerPropFooter>
+                          </OwnerPropBody>
+                          <OwnerPropMedia
+                            $photo={coverPhoto || undefined}
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => handleOpenFavourite(listing)}
+                            onKeyDown={(event) => {
+                              if (event.key === "Enter" || event.key === " ") {
+                                event.preventDefault();
+                                handleOpenFavourite(listing);
+                              }
+                            }}
+                          >
+                            {!coverPhoto && (
+                              <>
+                                <IconBuildingSvg aria-hidden />
+                                <OwnerPropMediaLabel>Property photo</OwnerPropMediaLabel>
+                              </>
+                            )}
+                            {photoCount > 0 && (
+                              <OwnerPropPhotoCount>
+                                1/{photoCount} photos
+                              </OwnerPropPhotoCount>
+                            )}
+                          </OwnerPropMedia>
+                        </OwnerPropCard>
+                      );
+                    })
+                  )}
+                </PropList>
+              </Card>
+
+              <Card>
+                <CardHead>
                   <CardTitle>Recent inquiries</CardTitle>
+
                   <CardAction type="button">View all</CardAction>
                 </CardHead>
                 <InquiryList>

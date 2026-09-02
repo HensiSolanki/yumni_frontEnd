@@ -4,10 +4,13 @@ import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useRouter } from "@/i18n/navigation";
+import { listFavouritesAction } from "@/redux/favourites/action";
 import { fetchPublicListingsAction } from "@/redux/homepage/action";
 import { setSelectedListing } from "@/redux/homepage/slice";
 import { PATH_PROPERTY } from "@/routes/path";
+import { getAuthToken } from "@/utils/authToken";
 import { mapListingToRealEstateCard } from "@/utils/listingDisplay";
+
 
 import RealEstateCardComponent from "./realEstateCardComponent";
 import RealEstateFilterOption from "./realEstatefilterOption";
@@ -41,6 +44,12 @@ const RealEstateTab = () => {
     dispatch(fetchPublicListingsAction(params));
   }, [dispatch, listingOptions, propertyOptions, selectedCity]);
 
+  useEffect(() => {
+    if (!getAuthToken()) return;
+    dispatch(listFavouritesAction({ page: 1, limit: 100 }));
+  }, [dispatch]);
+
+
   const handleViewDetails = useCallback(
     (listing) => {
       if (!listing?.id) return;
@@ -66,9 +75,11 @@ const RealEstateTab = () => {
               <RealEstateCardComponent
                 key={listing.id}
                 listing={mapListingToRealEstateCard(listing)}
+                sourceListing={listing}
                 onViewDetails={() => handleViewDetails(listing)}
               />
             ))
+
           )}
         </CardStack>
       </CardWrapper>
