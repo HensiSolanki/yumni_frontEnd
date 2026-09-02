@@ -11,7 +11,7 @@ const getEnvironment = () => {
     }
 };
 
-const DEFAULT_API_BASE_URL = "http://localhost:4000";
+const DEFAULT_API_BASE_URL = "https://admin.property973.com";
 
 const getAPIUrl = () => {
     const url =
