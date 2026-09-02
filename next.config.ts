@@ -6,7 +6,7 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 const apiProxyTarget =
   process.env.API_PROXY_TARGET ??
   process.env.NEXT_PUBLIC_API_URL ??
-  "http://localhost:4000";
+  "https://admin.property973.com";
 
 const nextConfig: NextConfig = {
   compiler: {
